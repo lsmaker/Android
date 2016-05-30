@@ -8,7 +8,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.lasalle.lsmaker_remote.ConnectionActivity">
+    tools:context=".activities.ConnectionActivity"
+    android:background="@color/colorSalle">
 
     <!-- Login progress -->
     <ProgressBar
@@ -65,7 +66,7 @@
 
             <Button
                 android:id="@+id/email_sign_in_button"
-                style="?android:textAppearanceSmall"
+                style="@style/SalleButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
