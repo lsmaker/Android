@@ -1,16 +1,15 @@
 <resources>
-    <string name="app_name">LsMaker_Remote</string>
+    <string name="app_name">LsMaker Remot</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
-    </string>
+    <string name="hint_device_name">Nom del dispositiu</string>
+    <string name="hint_pin">Pin</string>
+    <string name="action_sign_in">Connecta amb el dispositiu</string>
+    <string name="action_sign_in_short">Connecta</string>
+    <string name="error_invalid_device_name">El nom del dispositiu \és massa curt</string>
+    <string name="error_invalid_pincode">El pin és massa curt</string>
+    <string name="error_field_required">El camp no pot estar buit</string>
+    <string name="error_incorrect_credentials">No s\'ha pogut realitzar la connexió, algún dels camps és incorrecte</string>
+    <string name="connecting_message">Connectant, esperi un moment...</string>
+
 </resources>

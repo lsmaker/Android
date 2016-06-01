@@ -2,7 +2,5 @@
 <resources>
     <color name="colorPrimary">#3c3c3c</color>
     <color name="colorPrimaryDark">#1e1e1e</color>
-    <color name="colorAccent">#FF890D</color>
     <color name="colorSalle">#6bb1e2</color>
-    <color name="colorEnginyeria">#0063BE</color>
 </resources>
