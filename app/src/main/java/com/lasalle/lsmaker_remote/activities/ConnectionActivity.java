@@ -3,6 +3,7 @@ package com.lasalle.lsmaker_remote.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -161,6 +162,11 @@ public class ConnectionActivity extends AppCompatActivity {
         }
     }
 
+    public void goToDrivingActivity() {
+        Intent intent = new Intent(this, DrivingActivity.class);
+        startActivity(intent);
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
@@ -186,7 +192,7 @@ public class ConnectionActivity extends AppCompatActivity {
             showProgress(false);
 
             if (success) {
-                // finish();
+                goToDrivingActivity();
             } else {
                 pincodeView.setError(getResources().getString(R.string.error_incorrect_credentials));
                 pincodeView.requestFocus();

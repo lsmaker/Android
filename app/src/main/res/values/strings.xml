@@ -11,5 +11,11 @@
     <string name="error_field_required">El camp no pot estar buit</string>
     <string name="error_incorrect_credentials">No s\'ha pogut realitzar la connexió, algún dels camps és incorrecte</string>
     <string name="connecting_message">Connectant, esperi un moment...</string>
+    <string name="title_activity_driving">DrivingActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 
 </resources>
