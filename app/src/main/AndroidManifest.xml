@@ -11,6 +11,7 @@
         <activity
             android:name=".activities.ConnectionActivity"
             android:label="@string/app_name">
+            <!--android:theme="@style/AppThemeNoActionBar"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -20,7 +21,8 @@
         <activity
             android:name=".activities.DrivingActivity"
             android:label="@string/title_activity_driving"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

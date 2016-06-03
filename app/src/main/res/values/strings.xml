@@ -11,14 +11,20 @@
     <string name="error_field_required">El camp no pot estar buit</string>
     <string name="error_incorrect_credentials">No s\'ha pogut realitzar la connexió, algún dels camps és incorrecte</string>
     <string name="connecting_message">Connectant, esperi un moment...</string>
-    <string name="title_activity_driving">DrivingActivity</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
-    <string name="action_settings">Settings</string>
     <string name="connection_error_title">Error de connexió</string>
     <string name="pop_up_accept">ACCEPTAR</string>
     <string name="connection_error_message">No s\'ha pogut connectar amb el dispositiu</string>
+
+    <!-- Strings related to driving -->
+    <string name="title_activity_driving">DrivingActivity</string>
+
+    <string name="navigation_drawer_open">Obre el menú de navegació</string>
+    <string name="navigation_drawer_close">Tanca el menú de navegació</string>
+
+    <string name="action_settings">Configuració</string>
+    <string name="menu_driving_mode">Mode conducció</string>
+    <string name="configuration_menu_title">Configuració</string>
+    <string name="configuration_label">Configuració</string>
+
 
 </resources>

@@ -10,6 +10,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.lasalle.lsmaker_remote.activities.DrivingActivity"
-    tools:showIn="@layout/app_bar_driving">
+    tools:showIn="@layout/app_bar_driving"
+    android:background="@color/colorSalle">
+
+    <FrameLayout
+        android:id="@+id/driving_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 
 </RelativeLayout>
