@@ -30,11 +30,12 @@ public class BluetoothConnection implements DeviceConnection {
      * TODO: remove after connecting to a real authentication system.
      */
     private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "eduard:1234", "demo:12345"
+            "eduard:1234",
+            "demo:12345"
     };
 
     @Override
-    public boolean connect(String device, String password) {
+    public boolean connect(String device, String pincode) {
         // TODO: attempt authentication against a network service.
         try {
             // Simulate network access.
@@ -45,16 +46,16 @@ public class BluetoothConnection implements DeviceConnection {
 
         for (String credential : DUMMY_CREDENTIALS) {
             String[] pieces = credential.split(":");
-            if (pieces[0].equals(deviceName)) {
+            if (pieces[0].equals(device)) {
                 // Account exists, return true if the password matches.
                 return pieces[1].equals(pincode);
             }
         }
 
         ourInstance.deviceName = device;
-        ourInstance.pincode = password;
+        ourInstance.pincode = pincode;
 
-        return true;
+        return false;
     }
 
     @Override

@@ -17,5 +17,8 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="connection_error_title">Error de connexió</string>
+    <string name="pop_up_accept">ACCEPTAR</string>
+    <string name="connection_error_message">No s\'ha pogut connectar amb el dispositiu</string>
 
 </resources>

@@ -3,12 +3,15 @@ package com.lasalle.lsmaker_remote.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -89,13 +92,13 @@ public class ConnectionActivity extends AppCompatActivity {
 
         // Store values at the time of the login attempt.
         String deviceName = deviceNameView.getText().toString();
-        String password = pincodeView.getText().toString();
+        String pincode = pincodeView.getText().toString();
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+        if (TextUtils.isEmpty(pincode) && !isPasswordValid(pincode)) {
             pincodeView.setError(getResources().getString(R.string.error_invalid_pincode));
             focusView = pincodeView;
             cancel = true;
@@ -120,7 +123,7 @@ public class ConnectionActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(deviceName, password);
+            mAuthTask = new UserLoginTask(deviceName, pincode);
             mAuthTask.execute((Void) null);
         }
     }
@@ -158,13 +161,25 @@ public class ConnectionActivity extends AppCompatActivity {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
             mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            //mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
         }
     }
 
-    public void goToDrivingActivity() {
-        Intent intent = new Intent(this, DrivingActivity.class);
+    private void goToDrivingActivity() {
+        final Intent intent = new Intent(this, DrivingActivity.class);
         startActivity(intent);
+    }
+
+    private void showConnectionErrorPopUp(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.connection_error_title));
+        builder.setMessage(message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                pincodeView.requestFocus();
+                pincodeView.setText("");
+            }
+        });
+        builder.show();
     }
 
     /**
@@ -194,8 +209,7 @@ public class ConnectionActivity extends AppCompatActivity {
             if (success) {
                 goToDrivingActivity();
             } else {
-                pincodeView.setError(getResources().getString(R.string.error_incorrect_credentials));
-                pincodeView.requestFocus();
+                showConnectionErrorPopUp(getString(R.string.connection_error_message));
             }
         }
 
