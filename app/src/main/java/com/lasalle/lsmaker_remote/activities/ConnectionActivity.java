@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,7 +25,10 @@ import com.lasalle.lsmaker_remote.services.impl.BluetoothConnection;
 import com.lasalle.lsmaker_remote.utils.Utils;
 
 /**
- * A login screen that offers login via email/password.
+ * A login screen that offers login via device-name/password (or pincode).
+ *
+ * @author Eduard de Torres
+ * @version 0.1.1
  */
 public class ConnectionActivity extends AppCompatActivity {
 

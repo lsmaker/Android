@@ -1,11 +1,14 @@
 package com.lasalle.lsmaker_remote.services;
 
 /**
- * Created by Eduard on 31/05/2016.
+ * Interface to manage connection with LsMaker.
+ *
+ * @author Eduard de Torres
+ * @version 1.0.0
  */
 public interface DeviceConnection {
 
-    public boolean connect (String device, String password);
-    public boolean sendMessage (String message);
-    public boolean disconnect ();
+    boolean connect (String device, String password);
+    boolean sendMessage (String message);
+    boolean disconnect ();
 }

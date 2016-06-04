@@ -8,16 +8,26 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.lasalle.lsmaker_remote.R;
+import com.lasalle.lsmaker_remote.fragments.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.SliderDrivingFragment;
 
+/**
+ * Activity that manages the driving view.
+ * Contains a fragment to be able to choose between different driving views.
+ *
+ * Eduard de Torres
+ * @version 0.1.1
+ */
 public class DrivingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
+    private DrivingFragment drivingFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,11 +52,29 @@ public class DrivingActivity extends AppCompatActivity
 
         // Driving view fragment configuration.
 
-        SliderDrivingFragment drivingFragment = new SliderDrivingFragment();
+        drivingFragment = new SliderDrivingFragment();
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.driving_fragment_container, drivingFragment).commit();
+    }
+
+    /**
+     * Changes the current driving fragment.
+     *
+     * @param fragmentClassName name of the fragment class to use
+     */
+    public void changeDrivingFragment (String fragmentClassName) {
+        if (drivingFragment.getClass().getName().equals(fragmentClassName)) {
+            return;
+        }
+
+        if (fragmentClassName.equals(SliderDrivingFragment.class.getName())) {
+            drivingFragment = new SliderDrivingFragment();
+        }
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.driving_fragment_container, drivingFragment).commit();
     }
 
     @Override

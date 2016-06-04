@@ -3,7 +3,10 @@ package com.lasalle.lsmaker_remote.services.impl;
 import com.lasalle.lsmaker_remote.services.DeviceConnection;
 
 /**
- * Created by Eduard on 31/05/2016.
+ * DeviceConnection implementation for communication with LsMaker's Bluetooth.
+ *
+ * @author Eduard de Torres
+ * @version 0.0.1
  */
 public class BluetoothConnection implements DeviceConnection {
     private String deviceName;

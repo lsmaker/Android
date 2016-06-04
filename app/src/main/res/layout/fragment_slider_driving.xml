@@ -1,13 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="HELLO FRAGMENT"/>
+    <LinearLayout
+        android:id="@+id/slider_driving_left_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar
+            android:id="@+id/SeekBar01"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:progressDrawable="@drawable/progress_vertical"
+            android:layout_marginLeft="48dp"
+            android:thumb="@drawable/seek_thumb" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HELLO FRAGMENT"
+            android:layout_centerInParent="true"
+            android:id="@+id/textView2" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/forward_movement_button"
+            app:backgroundTint="@color/colorOrangeSalle"
+            android:src="@drawable/ic_double_arrow_up"
+            android:layout_above="@+id/backward_movement_button"
+            android:layout_alignLeft="@+id/backward_movement_button"
+            android:layout_alignStart="@+id/backward_movement_button"
+            android:layout_marginBottom="40dp"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/backward_movement_button"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginRight="24dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="24dp"
+            app:backgroundTint="@color/colorOrangeSalle"
+            android:src="@drawable/ic_double_arrow_down"
+            android:scaleX="1.5"
+            android:scaleY="1.5" />
+
+    </RelativeLayout>
 
 </LinearLayout>
