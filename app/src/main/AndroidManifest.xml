@@ -8,9 +8,14 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <service
+            android:name=".services.DataSenderService"
+            android:exported="false"/>
+
         <activity
             android:name=".activities.ConnectionActivity"
-            android:label="@string/app_name">
+            android:label="@string/connection_activity_label">
             <!--android:theme="@style/AppThemeNoActionBar"-->
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -1,4 +1,4 @@
-package com.lasalle.lsmaker_remote.fragments;
+package com.lasalle.lsmaker_remote.fragments.driving;
 
 import android.content.Context;
 import android.hardware.Sensor;
@@ -9,11 +9,12 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lasalle.lsmaker_remote.R;
-import com.lasalle.lsmaker_remote.fragments.interfaces.DrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 
 /**
  * Driving fragment consisting on a button.
@@ -36,16 +37,25 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
 
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_accelerometer_driving, container, false);
 
         runFab = (FloatingActionButton) view.findViewById(R.id.run_button);
-        runFab.setOnClickListener(new View.OnClickListener() {
+        runFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                //ToDo: Implement data storing on button pressed (pressed vs clicked?)
-                Log.d("FAB", "Run CLICK");
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d("FAB", event.toString());
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        Log.d("FAB", "PRESSeD");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        Log.d("FAB", "RELEASED");
+                        break;
+                }
+                return false;
             }
         });
 
@@ -84,7 +94,11 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
             x = event.values[0];
             y = event.values[1];
             z = event.values[2];
+
+            observer.setAcceleration(getAcceleration());
+            observer.setTurning(getTurning());
         }
+
     }
 
     @Override

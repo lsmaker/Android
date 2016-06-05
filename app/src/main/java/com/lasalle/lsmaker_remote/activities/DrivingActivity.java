@@ -1,5 +1,6 @@
 package com.lasalle.lsmaker_remote.activities;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -12,9 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.lasalle.lsmaker_remote.R;
-import com.lasalle.lsmaker_remote.fragments.AccelerometerDrivingFragment;
-import com.lasalle.lsmaker_remote.fragments.interfaces.DrivingFragment;
-import com.lasalle.lsmaker_remote.fragments.SliderDrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.AccelerometerDrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.SliderDrivingFragment;
+import com.lasalle.lsmaker_remote.services.DataSenderService;
 
 /**
  * Activity that manages the driving view.
@@ -57,6 +59,21 @@ public class DrivingActivity extends AppCompatActivity
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.driving_fragment_container, drivingFragment).commit();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        drivingFragment.setRunning(true);
+        Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
+        mDataSenderServiceIntent.putExtra("Observer", drivingFragment.getObserver());
+        startService(mDataSenderServiceIntent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        drivingFragment.setRunning(false);
     }
 
     /**

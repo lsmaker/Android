@@ -21,7 +21,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.lasalle.lsmaker_remote.R;
-import com.lasalle.lsmaker_remote.services.impl.BluetoothConnection;
+import com.lasalle.lsmaker_remote.services.BluetoothConnection;
 import com.lasalle.lsmaker_remote.utils.Utils;
 
 /**

@@ -16,7 +16,7 @@
     <string name="connection_error_message">No s\'ha pogut connectar amb el dispositiu</string>
 
     <!-- Strings related to driving -->
-    <string name="title_activity_driving">DrivingActivity</string>
+    <string name="title_activity_driving">Mode conducció</string>
 
     <string name="navigation_drawer_open">Obre el menú de navegació</string>
     <string name="navigation_drawer_close">Tanca el menú de navegació</string>
@@ -25,6 +25,7 @@
     <string name="menu_driving_mode">Mode conducció</string>
     <string name="configuration_menu_title">Configuració</string>
     <string name="configuration_label">Configuració</string>
+    <string name="connection_activity_label">Connecció</string>
 
 
 </resources>

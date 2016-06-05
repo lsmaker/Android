@@ -1,6 +1,4 @@
-package com.lasalle.lsmaker_remote.services.impl;
-
-import com.lasalle.lsmaker_remote.services.DeviceConnection;
+package com.lasalle.lsmaker_remote.services;
 
 /**
  * DeviceConnection implementation for communication with LsMaker's Bluetooth.
