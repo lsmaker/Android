@@ -16,6 +16,8 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 
 /**
  * Driving fragment consisting on a seekbar and two buttons.
+ * Forward / backward speed controlled by buttons + seekbar.
+ * Left / right turning controlled by accelerometer.
  *
  * @author Eduard de Torres
  * @version 0.1.1
@@ -23,13 +25,14 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 public class SliderDrivingFragment extends DrivingFragment {
 
     private VerticalSeekBar vSeekBar;
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_slider_driving, container, false);
+        view = inflater.inflate(R.layout.fragment_slider_driving, container, false);
 
         vSeekBar = (VerticalSeekBar)view.findViewById(R.id.SeekBar01);
         vSeekBar.setMax(100);

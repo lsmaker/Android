@@ -13,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.lasalle.lsmaker_remote.R;
+import com.lasalle.lsmaker_remote.fragments.AccelerometerDrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.SliderDrivingFragment;
 
@@ -52,7 +53,7 @@ public class DrivingActivity extends AppCompatActivity
 
         // Driving view fragment configuration.
 
-        drivingFragment = new SliderDrivingFragment();
+        drivingFragment = new AccelerometerDrivingFragment();
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
@@ -71,6 +72,9 @@ public class DrivingActivity extends AppCompatActivity
 
         if (fragmentClassName.equals(SliderDrivingFragment.class.getName())) {
             drivingFragment = new SliderDrivingFragment();
+        }
+        else if (fragmentClassName.equals(AccelerometerDrivingFragment.class.getName())) {
+            drivingFragment = new AccelerometerDrivingFragment();
         }
 
         getSupportFragmentManager().beginTransaction()
