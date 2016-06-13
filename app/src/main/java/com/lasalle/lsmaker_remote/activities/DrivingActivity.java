@@ -17,13 +17,14 @@ import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.AccelerometerDrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.SliderDrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.services.DataSenderService;
 
 /**
  * Activity that manages the driving view.
  * Contains a fragment to be able to choose between different driving views.
  *
- * Eduard de Torres
+ * @author Eduard de Torres
  * @version 0.1.1
  */
 public class DrivingActivity extends AppCompatActivity
@@ -69,16 +70,15 @@ public class DrivingActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        drivingFragment.setRunning(true);
+        DrivingFragmentObserver.setRunning(true);
         Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
-        mDataSenderServiceIntent.putExtra("Observer", drivingFragment.getObserver());
         startService(mDataSenderServiceIntent);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        drivingFragment.setRunning(false);
+        DrivingFragmentObserver.setRunning(false);
     }
 
     /**
@@ -140,9 +140,10 @@ public class DrivingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_driving) {
-            // Handle the camera action
-        } else if (id == R.id.nav_configuration) {
 
+        } else if (id == R.id.nav_configuration) {
+            Intent i = new Intent(this, SettingsActivity.class);
+            startActivity(i);
         }
 
         drawer.closeDrawer(GravityCompat.START);

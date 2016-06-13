@@ -15,6 +15,7 @@ import android.widget.Button;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 
 /**
@@ -79,7 +80,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         }
 
         if (forwardFab.isPressed() || backwardFab.isPressed()) {
-            observer.setTurning(getTurning());
+            DrivingFragmentObserver.setTurning(getTurning());
         }
     }
 
@@ -107,7 +108,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public void onProgressChanged(VerticalSeekBar seekBar, int progress, boolean fromUser) {
 
                 if (forwardFab.isPressed() || backwardFab.isPressed()) {
-                    observer.setAcceleration(getAcceleration());
+                    DrivingFragmentObserver.setAcceleration(getAcceleration());
                 }
             }
 
@@ -129,10 +130,10 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        observer.setAccelerationAndTurning(getAcceleration(), getTurning());
+                        DrivingFragmentObserver.setAccelerationAndTurning(getAcceleration(), getTurning());
                         break;
                     case MotionEvent.ACTION_UP:
-                        observer.setAccelerationAndTurning(0, 0);
+                        DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
                         break;
                 }
                 return false;
@@ -145,10 +146,10 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        observer.setAccelerationAndTurning(getAcceleration(), getTurning());
+                        DrivingFragmentObserver.setAccelerationAndTurning(getAcceleration(), getTurning());
                         break;
                     case MotionEvent.ACTION_UP:
-                        observer.setAccelerationAndTurning(0, 0);
+                        DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
                         break;
                 }
                 return false;

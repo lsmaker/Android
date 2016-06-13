@@ -34,12 +34,10 @@ public class DataSenderService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
-        DrivingFragmentObserver drivingObserver;
-        drivingObserver = (DrivingFragmentObserver) workIntent.getSerializableExtra("Observer");
 
-        while (drivingObserver.isRunning()) {
-            int acceleration = drivingObserver.getAcceleration();
-            int turning = drivingObserver.getTurning();
+        while (DrivingFragmentObserver.isRunning()) {
+            int acceleration = DrivingFragmentObserver.getAcceleration();
+            int turning = DrivingFragmentObserver.getTurning();
 
             Log.d("DATASENDER", acceleration + " " + turning);
 

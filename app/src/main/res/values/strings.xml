@@ -26,6 +26,7 @@
     <string name="configuration_menu_title">Configuració</string>
     <string name="configuration_label">Configuració</string>
     <string name="connection_activity_label">Connecció</string>
+    <string name="title_activity_settings">Configuració</string>
 
 
 </resources>

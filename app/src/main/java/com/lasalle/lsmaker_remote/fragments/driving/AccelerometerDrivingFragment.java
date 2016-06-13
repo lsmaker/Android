@@ -15,6 +15,7 @@ import android.widget.Button;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 
 /**
  * Driving fragment consisting on a button.
@@ -108,8 +109,8 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
             data[Y] = event.values[Y];
             data[Z] = event.values[Z];
 
-            observer.setAcceleration(getAcceleration());
-            observer.setTurning(getTurning());
+            DrivingFragmentObserver.setAcceleration(getAcceleration());
+            DrivingFragmentObserver.setTurning(getTurning());
         }
     }
 

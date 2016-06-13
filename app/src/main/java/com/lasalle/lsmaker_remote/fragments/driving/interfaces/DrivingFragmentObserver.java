@@ -14,25 +14,34 @@ public class DrivingFragmentObserver implements Serializable {
     private int turning;
     private boolean running;
 
-    public int getAcceleration() {
-        return acceleration;
+    private static DrivingFragmentObserver instance = null;
+    private static synchronized DrivingFragmentObserver getInstance() {
+        if (instance == null) {
+            instance = new DrivingFragmentObserver();
+        }
+        return instance;
     }
 
-    public void setAcceleration(int acceleration) {
-        this.acceleration = acceleration;
+    public static int getAcceleration() {
+        return getInstance().acceleration;
+
     }
 
-    public int getTurning() {
-        return turning;
+    public static void setAcceleration(int acceleration) {
+        getInstance().acceleration = acceleration;
     }
 
-    public void setTurning(int turning) {
-        this.turning = turning;
+    public static int getTurning() {
+        return getInstance().turning;
     }
 
-    public void setAccelerationAndTurning(int acceleration, int turning) {
-        this.acceleration = acceleration;
-        this.turning = turning;
+    public static void setTurning(int turning) {
+        getInstance().turning = turning;
+    }
+
+    public static void setAccelerationAndTurning(int acceleration, int turning) {
+        setAcceleration(acceleration);
+        setTurning(turning);
     }
 
     /**
@@ -40,8 +49,8 @@ public class DrivingFragmentObserver implements Serializable {
      *
      * @return true if the driving activity is running
      */
-    public boolean isRunning() {
-        return running;
+    public static boolean isRunning() {
+        return getInstance().running;
     }
 
     /**
@@ -49,7 +58,7 @@ public class DrivingFragmentObserver implements Serializable {
      *
      * @param running value to be set
      */
-    public void setRunning(boolean running) {
-        this.running = running;
+    public static void setRunning(boolean running) {
+        getInstance().running = running;
     }
 }

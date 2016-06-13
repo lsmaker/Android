@@ -15,12 +15,9 @@ import android.view.ViewGroup;
  */
 public abstract class DrivingFragment extends Fragment {
 
-    protected DrivingFragmentObserver observer;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        observer = new DrivingFragmentObserver();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -52,25 +49,5 @@ public abstract class DrivingFragment extends Fragment {
      */
     public abstract int getTurning();
 
-    /**
-     * Returns if the Driving fragment is running (Activity onResume)
-     *
-     * @return true if the driving activity is running
-     */
-    public boolean isRunning() {
-        return observer.isRunning();
-    }
 
-    /**
-     * Sets if the DrivingActivity is running and visible.
-     *
-     * @param running value to be set
-     */
-    public void setRunning(boolean running) {
-        observer.setRunning(running);
-    }
-
-    public DrivingFragmentObserver getObserver() {
-        return observer;
-    }
 }
