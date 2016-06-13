@@ -52,12 +52,21 @@ public class ConnectionActivity extends AppCompatActivity {
         
         // Set up the login form.
         deviceNameView = (AutoCompleteTextView) findViewById(R.id.device_name);
+        deviceNameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    pincodeView.requestFocus();
+                }
+                return false;
+            }
+        });
 
         pincodeView = (EditText) findViewById(R.id.pincode);
         pincodeView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                if (id == R.id.login || id == EditorInfo.IME_ACTION_DONE) {
                     attemptLogin();
                     return true;
                 }
@@ -65,9 +74,9 @@ public class ConnectionActivity extends AppCompatActivity {
             }
         });
 
-        Button mEmailSignInButton = (Button) findViewById(R.id.login_button);
-        if (mEmailSignInButton != null) {
-            mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mLogInButton = (Button) findViewById(R.id.login_button);
+        if (mLogInButton != null) {
+            mLogInButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     attemptLogin();

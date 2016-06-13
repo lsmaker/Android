@@ -35,7 +35,8 @@
                     android:hint="@string/hint_device_name"
                     android:inputType="text"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:imeOptions="actionNext"/>
 
             </android.support.design.widget.TextInputLayout>
 
@@ -50,7 +51,7 @@
                     android:hint="@string/hint_pin"
                     android:imeActionId="@+id/login"
                     android:imeActionLabel="@string/action_sign_in_short"
-                    android:imeOptions="actionUnspecified"
+                    android:imeOptions="actionDone"
                     android:inputType="numberPassword"
                     android:maxLines="1"
                     android:singleLine="true" />
