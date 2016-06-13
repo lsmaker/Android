@@ -35,7 +35,9 @@ public class DrivingActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_driving);
+        // Screen orientation's configuration.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -54,7 +56,7 @@ public class DrivingActivity extends AppCompatActivity
 
         // Driving view fragment configuration.
 
-        drivingFragment = new AccelerometerDrivingFragment();
+        drivingFragment = new SliderDrivingFragment();
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()

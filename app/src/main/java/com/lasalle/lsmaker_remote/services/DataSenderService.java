@@ -46,6 +46,7 @@ public class DataSenderService extends IntentService {
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
+                System.err.println(e.getMessage());
             }
         }
 

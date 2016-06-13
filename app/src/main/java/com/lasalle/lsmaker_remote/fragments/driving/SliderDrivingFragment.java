@@ -6,12 +6,12 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
@@ -28,8 +28,8 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 public class SliderDrivingFragment extends DrivingFragment implements SensorEventListener {
 
     private VerticalSeekBar vSeekBar;
-    private FloatingActionButton forwardFab;
-    private FloatingActionButton backwardFab;
+    private Button forwardFab;
+    private Button backwardFab;
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
     private float x;
@@ -52,9 +52,11 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
     @Override
     public int getAcceleration() {
         if (forwardFab.isPressed()) {
+            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
             return vSeekBar.getProgress();
         }
         if (backwardFab.isPressed()) {
+            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
             return -vSeekBar.getProgress();
         }
         return 0;
@@ -76,7 +78,9 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             z = event.values[2];
         }
 
-        observer.setTurning(getTurning());
+        if (forwardFab.isPressed() || backwardFab.isPressed()) {
+            observer.setTurning(getTurning());
+        }
     }
 
     @Override
@@ -101,7 +105,10 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         vSeekBar.setOnSeekBarChangeListener(new VerticalSeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(VerticalSeekBar seekBar, int progress, boolean fromUser) {
-                observer.setAcceleration(getAcceleration());
+
+                if (forwardFab.isPressed() || backwardFab.isPressed()) {
+                    observer.setAcceleration(getAcceleration());
+                }
             }
 
             @Override
@@ -115,31 +122,33 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             }
         });
 
-        forwardFab = (FloatingActionButton) view.findViewById(R.id.forward_movement_button);
+
+        forwardFab = (Button) view.findViewById(R.id.forward_movement_button);
         forwardFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_BUTTON_PRESS:
+                    case MotionEvent.ACTION_DOWN:
                         observer.setAccelerationAndTurning(getAcceleration(), getTurning());
                         break;
-                    case MotionEvent.ACTION_BUTTON_RELEASE:
-                        observer.setAccelerationAndTurning(getAcceleration(), getTurning());
+                    case MotionEvent.ACTION_UP:
+                        observer.setAccelerationAndTurning(0, 0);
                         break;
                 }
                 return false;
             }
         });
-        backwardFab = (FloatingActionButton) view.findViewById(R.id.backward_movement_button);
+
+        backwardFab = (Button) view.findViewById(R.id.backward_movement_button);
         backwardFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
-                    case MotionEvent.ACTION_BUTTON_PRESS:
+                    case MotionEvent.ACTION_DOWN:
                         observer.setAccelerationAndTurning(getAcceleration(), getTurning());
                         break;
-                    case MotionEvent.ACTION_BUTTON_RELEASE:
-                        observer.setAccelerationAndTurning(getAcceleration(), getTurning());
+                    case MotionEvent.ACTION_UP:
+                        observer.setAccelerationAndTurning(0, 0);
                         break;
                 }
                 return false;

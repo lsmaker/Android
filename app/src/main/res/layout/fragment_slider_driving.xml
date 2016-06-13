@@ -41,7 +41,7 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <android.support.design.widget.FloatingActionButton
+        <!--android.support.design.widget.FloatingActionButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/forward_movement_button"
@@ -52,11 +52,21 @@
             android:layout_alignStart="@+id/backward_movement_button"
             android:layout_marginBottom="40dp"
             android:scaleX="1.5"
-            android:scaleY="1.5" />
+            android:scaleY="1.5" /-->
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/forward_movement_button"
+            android:layout_above="@+id/backward_movement_button"
+            android:layout_alignLeft="@+id/backward_movement_button"
+            android:layout_alignStart="@+id/backward_movement_button"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/ic_double_arrow_up" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
             android:id="@+id/backward_movement_button"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"
@@ -64,10 +74,7 @@
             android:layout_marginRight="24dp"
             android:layout_marginEnd="24dp"
             android:layout_marginBottom="24dp"
-            app:backgroundTint="@color/colorOrangeSalle"
-            android:src="@drawable/ic_double_arrow_down"
-            android:scaleX="1.5"
-            android:scaleY="1.5" />
+            android:background="@drawable/ic_double_arrow_down" />
 
     </RelativeLayout>
 
