@@ -30,6 +30,10 @@
         <item name="android:textColor">@color/colorSalle</item>
     </style>
 
+    <style name="SalleTitle" parent="android:TextAppearance.DeviceDefault.Large">
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
     <style name="AppCompatAlertDialogStyle" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorAccent">#5fa3d0</item>
         <item name="android:textColorPrimary">#000000</item>

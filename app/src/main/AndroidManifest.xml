@@ -18,11 +18,7 @@
             android:name=".activities.ConnectionActivity"
             android:label="@string/connection_activity_label">
             <!--android:theme="@style/AppThemeNoActionBar"-->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.DrivingActivity"
@@ -33,7 +29,14 @@
             android:name=".activities.SettingsActivity"
             android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -23,7 +23,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  * Left / right turning controlled by accelerometer.
  *
  * @author Eduard de Torres
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class AccelerometerDrivingFragment extends DrivingFragment implements SensorEventListener {
 
@@ -82,6 +82,7 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     @Override
     public int getAcceleration() {
         if (runFab.isPressed()) {
+            // TODO: Implement
             //currentXAngle = getXAngle();
             //Log.d("DRIVING", "X_ANGLE: " + currentXAngle);
             Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
@@ -94,7 +95,7 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     @Override
     public int getTurning() {
         if (runFab.isPressed()) {
-
+        // TODO: Implement
             return 0;
         }
         return 0;

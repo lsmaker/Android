@@ -24,7 +24,7 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
  * Left / right turning controlled by accelerometer.
  *
  * @author Eduard de Torres
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class SliderDrivingFragment extends DrivingFragment implements SensorEventListener {
 

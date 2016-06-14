@@ -1,19 +1,19 @@
 package com.lasalle.lsmaker_remote.fragments.driving.interfaces;
 
-import java.io.Serializable;
 
 /**
  * Observer for DrivingFragment class.
  * Provides updated information on acceleration and turning values to be checked by DataSenderService.
  *
  * @author Eduard de Torres
- * @version 1.0.0
+ * @version 1.1.0
  */
-public class DrivingFragmentObserver implements Serializable {
+public class DrivingFragmentObserver {
     private int acceleration;
     private int turning;
     private boolean running;
 
+    // Singleton synchronized implementation.
     private static DrivingFragmentObserver instance = null;
     private static synchronized DrivingFragmentObserver getInstance() {
         if (instance == null) {
@@ -24,7 +24,6 @@ public class DrivingFragmentObserver implements Serializable {
 
     public static int getAcceleration() {
         return getInstance().acceleration;
-
     }
 
     public static void setAcceleration(int acceleration) {

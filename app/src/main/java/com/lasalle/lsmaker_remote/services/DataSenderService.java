@@ -12,7 +12,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  * DeviceConnection service to communicate with the robot.
  *
  * @author Eduard de Torres
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class DataSenderService extends IntentService {
 

@@ -28,5 +28,12 @@
     <string name="connection_activity_label">Connecció</string>
     <string name="title_activity_settings">Configuració</string>
 
+    <!-- Strings related to preferences -->
+    <string name="preferences_connection_title">Connexió</string>
+    <string name="preferences_connection_button_text">Desconnectar</string>
+    <string name="preferences_invert_title">Invertir controls</string>
+    <string name="preferences_invert_description">Inverteix de posició els controls de conducció</string>
+    <string name="preferences_theme_title">Tema  de conducció</string>
+
 
 </resources>

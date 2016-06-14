@@ -25,7 +25,7 @@ import com.lasalle.lsmaker_remote.services.DataSenderService;
  * Contains a fragment to be able to choose between different driving views.
  *
  * @author Eduard de Torres
- * @version 0.1.1
+ * @version 0.1.2
  */
 public class DrivingActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -36,7 +36,7 @@ public class DrivingActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_driving);
+        setContentView(R.layout.drawer_base);
         // Screen orientation's configuration.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         // Keeps screen from turning off.
@@ -59,7 +59,6 @@ public class DrivingActivity extends AppCompatActivity
         }
 
         // Driving view fragment configuration.
-
         drivingFragment = new SliderDrivingFragment();
 
         // Add the fragment to the 'fragment_container' FrameLayout
@@ -140,7 +139,7 @@ public class DrivingActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_driving) {
-
+            // Nothing to do.
         } else if (id == R.id.nav_configuration) {
             Intent i = new Intent(this, SettingsActivity.class);
             startActivity(i);

@@ -11,7 +11,7 @@ import android.view.ViewGroup;
  * Abstract base fragment to work with DrivingActivity.
  *
  * @author Eduard de Torres
- * @version 1.0.0
+ * @version 1.1.0
  */
 public abstract class DrivingFragment extends Fragment {
 
