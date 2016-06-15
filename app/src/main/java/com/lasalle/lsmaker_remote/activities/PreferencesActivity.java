@@ -3,7 +3,6 @@ package com.lasalle.lsmaker_remote.activities;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -14,11 +13,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.services.BluetoothConnection;
+import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Activity that manages the settings view.
@@ -26,7 +26,7 @@ import com.lasalle.lsmaker_remote.services.BluetoothConnection;
  * @author Eduard de Torres
  * @version 1.0.0
  */
-public class SettingsActivity extends AppCompatActivity
+public class PreferencesActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout drawer;
@@ -60,6 +60,13 @@ public class SettingsActivity extends AppCompatActivity
         View child = getLayoutInflater().inflate(R.layout.content_settings, null);
         mainLayout.addView(child);
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        CheckBox invertModeCheckbox = (CheckBox) findViewById(R.id.preferences_invert_checkbox);
+        invertModeCheckbox.setChecked(PreferencesService.isInvertMode());
     }
 
     @Override
@@ -118,8 +125,9 @@ public class SettingsActivity extends AppCompatActivity
     }
 
     public void onInvertControlsButtonClick (View view) {
-        // TODO: Implement invert controls.
-        Log.d(this.getClass().getName(), "Controls inversion");
+        final CheckBox invertModeCheckbox = (CheckBox) findViewById(R.id.preferences_invert_checkbox);
+        final boolean invertMode = invertModeCheckbox.isChecked();
+        PreferencesService.setInvertMode(invertMode);
     }
 
     public void onChangeThemeButtonClick (View view) {

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false">
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/forward_movement_button"
+            android:layout_above="@+id/backward_movement_button"
+            android:layout_alignRight="@+id/backward_movement_button"
+            android:layout_alignEnd="@+id/backward_movement_button"
+            android:layout_marginBottom="40dp"
+            android:background="@drawable/ic_double_arrow_up" />
+
+
+        <Button
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:id="@+id/backward_movement_button"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/ic_double_arrow_down" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="2">
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/slider_driving_left_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" >
+
+        <com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar
+            android:id="@+id/SeekBar01"
+            android:layout_width="25dp"
+            android:layout_height="match_parent"
+            android:progressDrawable="@drawable/progress_vertical"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="48dp"
+            android:layout_marginEnd="48dp"
+            android:thumb="@drawable/seek_thumb" />
+
+    </RelativeLayout>
+
+</LinearLayout>

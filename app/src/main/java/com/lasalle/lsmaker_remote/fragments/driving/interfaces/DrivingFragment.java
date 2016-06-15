@@ -1,11 +1,14 @@
 package com.lasalle.lsmaker_remote.fragments.driving.interfaces;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Abstract base fragment to work with DrivingActivity.
@@ -15,9 +18,13 @@ import android.view.ViewGroup;
  */
 public abstract class DrivingFragment extends Fragment {
 
+    protected View mainView;
+    protected boolean isInverted;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        isInverted = PreferencesService.isInvertMode();
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
@@ -48,6 +55,14 @@ public abstract class DrivingFragment extends Fragment {
      * @return speed value of turning movement
      */
     public abstract int getTurning();
+
+    protected void setViewLayout(int id) {
+        LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mainView = inflater.inflate(id, null);
+        ViewGroup rootView = (ViewGroup) getView();
+        rootView.removeAllViews();
+        rootView.addView(mainView);
+    }
 
 
 }

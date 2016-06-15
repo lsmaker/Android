@@ -59,7 +59,9 @@ public class DrivingActivity extends AppCompatActivity
         }
 
         // Driving view fragment configuration.
+        // TODO: Get driving fragment from Preferences.
         drivingFragment = new SliderDrivingFragment();
+        //drivingFragment = new AccelerometerDrivingFragment();
 
         // Add the fragment to the 'fragment_container' FrameLayout
         getSupportFragmentManager().beginTransaction()
@@ -141,7 +143,7 @@ public class DrivingActivity extends AppCompatActivity
         if (id == R.id.nav_driving) {
             // Nothing to do.
         } else if (id == R.id.nav_configuration) {
-            Intent i = new Intent(this, SettingsActivity.class);
+            Intent i = new Intent(this, PreferencesActivity.class);
             startActivity(i);
         }
 

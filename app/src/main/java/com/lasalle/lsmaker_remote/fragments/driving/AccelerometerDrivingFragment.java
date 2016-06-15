@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
+import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Driving fragment consisting on a button.
@@ -23,7 +24,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  * Left / right turning controlled by accelerometer.
  *
  * @author Eduard de Torres
- * @version 0.1.3
+ * @version 0.1.4
  */
 public class AccelerometerDrivingFragment extends DrivingFragment implements SensorEventListener {
 
@@ -49,9 +50,13 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_accelerometer_driving, container, false);
+        if (isInverted) {
+            mainView = inflater.inflate(R.layout.fragment_accelerometer_driving_inverted, container, false);
+        } else {
+            mainView = inflater.inflate(R.layout.fragment_accelerometer_driving, container, false);
+        }
 
-        runFab = (Button) view.findViewById(R.id.run_button);
+        runFab = (Button) mainView.findViewById(R.id.run_button);
         runFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -76,7 +81,27 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
-        return view;
+        return mainView;
+    }
+
+    public void onPause() {
+        super.onPause();
+        senSensorManager.unregisterListener(this);
+    }
+
+    public void onResume() {
+        super.onResume();
+        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+
+        if (isInverted != PreferencesService.isInvertMode()) {
+            isInverted = PreferencesService.isInvertMode();
+            if (isInverted) {
+                setViewLayout(R.layout.fragment_accelerometer_driving_inverted);
+            } else {
+                setViewLayout(R.layout.fragment_accelerometer_driving_inverted);
+            }
+        }
+
     }
 
     @Override
@@ -118,16 +143,6 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    public void onPause() {
-        super.onPause();
-        senSensorManager.unregisterListener(this);
-    }
-
-    public void onResume() {
-        super.onResume();
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
     private double getXAngle() {

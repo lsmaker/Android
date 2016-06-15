@@ -16,6 +16,7 @@ import android.widget.Button;
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
+import com.lasalle.lsmaker_remote.services.PreferencesService;
 import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 
 /**
@@ -24,7 +25,7 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
  * Left / right turning controlled by accelerometer.
  *
  * @author Eduard de Torres
- * @version 0.1.2
+ * @version 0.1.3
  */
 public class SliderDrivingFragment extends DrivingFragment implements SensorEventListener {
 
@@ -43,50 +44,15 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         super.onCreateView(inflater, container, savedInstanceState);
 
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_slider_driving, container, false);
-
-        configureView(view);
-
-        return view;
-    }
-
-    @Override
-    public int getAcceleration() {
-        if (forwardFab.isPressed()) {
-            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
-            return vSeekBar.getProgress();
-        }
-        if (backwardFab.isPressed()) {
-            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
-            return -vSeekBar.getProgress();
-        }
-        return 0;
-    }
-
-    @Override
-    public int getTurning() {
-        Log.d("DRIVING", "X: " + x + " Y: " + y + " Z: " + z);
-        return 0;
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
-
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            x = event.values[0];
-            y = event.values[1];
-            z = event.values[2];
+        if (isInverted) {
+            mainView = inflater.inflate(R.layout.fragment_slider_driving_inverted, container, false);
+        } else {
+            mainView = inflater.inflate(R.layout.fragment_slider_driving, container, false);
         }
 
-        if (forwardFab.isPressed() || backwardFab.isPressed()) {
-            DrivingFragmentObserver.setTurning(getTurning());
-        }
-    }
+        configureView(mainView);
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
+        return mainView;
     }
 
     public void onPause() {
@@ -97,6 +63,15 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
     public void onResume() {
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+
+        if (isInverted != PreferencesService.isInvertMode()) {
+            isInverted = PreferencesService.isInvertMode();
+            if (isInverted) {
+                setViewLayout(R.layout.fragment_accelerometer_driving_inverted);
+            } else {
+                setViewLayout(R.layout.fragment_accelerometer_driving_inverted);
+            }
+        }
     }
 
     private void configureView(View view) {
@@ -161,4 +136,44 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
+
+    @Override
+    public int getAcceleration() {
+        if (forwardFab.isPressed()) {
+            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
+            return vSeekBar.getProgress();
+        }
+        if (backwardFab.isPressed()) {
+            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
+            return -vSeekBar.getProgress();
+        }
+        return 0;
+    }
+
+    @Override
+    public int getTurning() {
+        Log.d("DRIVING", "X: " + x + " Y: " + y + " Z: " + z);
+        return 0;
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Sensor mySensor = event.sensor;
+
+        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            x = event.values[0];
+            y = event.values[1];
+            z = event.values[2];
+        }
+
+        if (forwardFab.isPressed() || backwardFab.isPressed()) {
+            DrivingFragmentObserver.setTurning(getTurning());
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+    }
+
 }
