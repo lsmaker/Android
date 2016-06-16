@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.services.BluetoothConnection;
@@ -60,7 +61,7 @@ public class PreferencesActivity extends AppCompatActivity
 
         // Loads the activity content's view to the drawer content view
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.app_bar_content);
-        View child = getLayoutInflater().inflate(R.layout.content_settings, null);
+        View child = getLayoutInflater().inflate(R.layout.content_preferences, null);
         mainLayout.addView(child);
 
     }
@@ -70,6 +71,8 @@ public class PreferencesActivity extends AppCompatActivity
         super.onResume();
         CheckBox invertModeCheckbox = (CheckBox) findViewById(R.id.preferences_invert_checkbox);
         invertModeCheckbox.setChecked(PreferencesService.isInvertMode());
+        TextView themeText = (TextView) findViewById(R.id.preferences_theme_text);
+        themeText.setText(PreferencesService.getDrivingTheme().name());
     }
 
     @Override
@@ -134,8 +137,6 @@ public class PreferencesActivity extends AppCompatActivity
     }
 
     public void onChangeThemeButtonClick (View view) {
-        // TODO: Implement change driving theme.
-        Log.d(this.getClass().getName(), "Theme selection pop up");
         showThemePicker();
     }
 
@@ -168,6 +169,9 @@ public class PreferencesActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = arrayAdapter.getItem(which);
                         PreferencesService.setDrivingTheme(PreferencesService.DrivingTheme.valueOf(strName));
+
+                        TextView themeText = (TextView) findViewById(R.id.preferences_theme_text);
+                        themeText.setText(PreferencesService.getDrivingTheme().name());
                     }
                 });
         builderSingle.show();

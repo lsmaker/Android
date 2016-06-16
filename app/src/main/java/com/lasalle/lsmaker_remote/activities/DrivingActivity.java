@@ -60,7 +60,6 @@ public class DrivingActivity extends AppCompatActivity
         }
 
         // Driving view fragment configuration.
-        // TODO: Get driving fragment from Preferences.
         drivingFragment = new SliderDrivingFragment();
         //drivingFragment = new AccelerometerDrivingFragment();
 
