@@ -1,5 +1,6 @@
 package com.lasalle.lsmaker_remote.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -7,12 +8,14 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.RelativeLayout;
 
@@ -133,5 +136,40 @@ public class PreferencesActivity extends AppCompatActivity
     public void onChangeThemeButtonClick (View view) {
         // TODO: Implement change driving theme.
         Log.d(this.getClass().getName(), "Theme selection pop up");
+        showThemePicker();
+    }
+
+    private void showThemePicker() {
+        AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+        //builderSingle.setIcon(R.drawable.ic_launcher);
+        builderSingle.setTitle(getString(R.string.preferences_theme_picker_title));
+
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+                this,
+                android.R.layout.select_dialog_singlechoice);
+
+        for (PreferencesService.DrivingTheme theme: PreferencesService.DrivingTheme.values()) {
+            arrayAdapter.add(theme.name());
+        }
+
+        builderSingle.setNegativeButton(
+                "cancel",
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+        builderSingle.setAdapter(
+                arrayAdapter,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String strName = arrayAdapter.getItem(which);
+                        PreferencesService.setDrivingTheme(PreferencesService.DrivingTheme.valueOf(strName));
+                    }
+                });
+        builderSingle.show();
     }
 }

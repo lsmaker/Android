@@ -34,6 +34,7 @@
     <string name="preferences_invert_title">Invertir controls</string>
     <string name="preferences_invert_description">Inverteix de posició els controls de conducció</string>
     <string name="preferences_theme_title">Tema  de conducció</string>
+    <string name="preferences_theme_picker_title">Escull mode de conducció</string>
 
 
 </resources>

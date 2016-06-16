@@ -19,6 +19,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.SliderDrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.services.DataSenderService;
+import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Activity that manages the driving view.
@@ -74,6 +75,7 @@ public class DrivingActivity extends AppCompatActivity
         DrivingFragmentObserver.setRunning(true);
         Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
         startService(mDataSenderServiceIntent);
+        changeDrivingFragment(PreferencesService.getDrivingTheme());
     }
 
     @Override
@@ -85,18 +87,21 @@ public class DrivingActivity extends AppCompatActivity
     /**
      * Changes the current driving fragment.
      *
-     * @param fragmentClassName name of the fragment class to use
+     * @param theme DrivingTheme value to choose as driving view
      */
-    public void changeDrivingFragment (String fragmentClassName) {
-        if (drivingFragment.getClass().getName().equals(fragmentClassName)) {
-            return;
-        }
+    public void changeDrivingFragment (PreferencesService.DrivingTheme theme) {
 
-        if (fragmentClassName.equals(SliderDrivingFragment.class.getName())) {
-            drivingFragment = new SliderDrivingFragment();
-        }
-        else if (fragmentClassName.equals(AccelerometerDrivingFragment.class.getName())) {
+        if (theme.equals(PreferencesService.DrivingTheme.FULL_ACCELEROMETER)) {
+            if (drivingFragment.getClass().equals(AccelerometerDrivingFragment.class)) {
+                return;
+            }
             drivingFragment = new AccelerometerDrivingFragment();
+        }
+        if (theme.equals(PreferencesService.DrivingTheme.SEMI_ACCELEROMETER)) {
+            if (drivingFragment.getClass().equals(SliderDrivingFragment.class)) {
+                return;
+            }
+            drivingFragment = new SliderDrivingFragment();
         }
 
         getSupportFragmentManager().beginTransaction()
