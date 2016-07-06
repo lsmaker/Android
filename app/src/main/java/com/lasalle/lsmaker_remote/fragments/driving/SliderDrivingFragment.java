@@ -64,8 +64,8 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         super.onResume();
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
 
-        if (isInverted != PreferencesService.isInvertMode()) {
-            isInverted = PreferencesService.isInvertMode();
+        if (isInverted != PreferencesService.isInvertMode(getContext())) {
+            isInverted = PreferencesService.isInvertMode(getContext());
             if (isInverted) {
                 setViewLayout(R.layout.fragment_accelerometer_driving_inverted);
             } else {

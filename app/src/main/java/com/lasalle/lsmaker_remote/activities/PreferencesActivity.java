@@ -62,17 +62,25 @@ public class PreferencesActivity extends AppCompatActivity
         // Loads the activity content's view to the drawer content view
         RelativeLayout mainLayout = (RelativeLayout) findViewById(R.id.app_bar_content);
         View child = getLayoutInflater().inflate(R.layout.content_preferences, null);
-        mainLayout.addView(child);
+        if (mainLayout != null) {
+            mainLayout.addView(child);
+        }
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
         CheckBox invertModeCheckbox = (CheckBox) findViewById(R.id.preferences_invert_checkbox);
-        invertModeCheckbox.setChecked(PreferencesService.isInvertMode());
+        if (invertModeCheckbox != null) {
+            invertModeCheckbox.setChecked(PreferencesService.isInvertMode(getApplicationContext()));
+        }
+
         TextView themeText = (TextView) findViewById(R.id.preferences_theme_text);
-        themeText.setText(PreferencesService.getDrivingTheme().name());
+        if (themeText != null) {
+            themeText.setText(PreferencesService.getDrivingTheme(getApplicationContext()).name());
+        }
     }
 
     @Override
@@ -132,8 +140,10 @@ public class PreferencesActivity extends AppCompatActivity
 
     public void onInvertControlsButtonClick (View view) {
         final CheckBox invertModeCheckbox = (CheckBox) findViewById(R.id.preferences_invert_checkbox);
-        final boolean invertMode = invertModeCheckbox.isChecked();
-        PreferencesService.setInvertMode(invertMode);
+        if (invertModeCheckbox != null) {
+            final boolean invertMode = invertModeCheckbox.isChecked();
+            PreferencesService.setInvertMode(invertMode, getApplicationContext());
+        }
     }
 
     public void onChangeThemeButtonClick (View view) {
@@ -145,7 +155,7 @@ public class PreferencesActivity extends AppCompatActivity
         //builderSingle.setIcon(R.drawable.ic_launcher);
         builderSingle.setTitle(getString(R.string.preferences_theme_picker_title));
 
-        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
+        final ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(
                 this,
                 android.R.layout.select_dialog_singlechoice);
 
@@ -168,10 +178,11 @@ public class PreferencesActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String strName = arrayAdapter.getItem(which);
-                        PreferencesService.setDrivingTheme(PreferencesService.DrivingTheme.valueOf(strName));
+                        PreferencesService.setDrivingTheme(PreferencesService.DrivingTheme.valueOf(strName), getApplicationContext());
 
                         TextView themeText = (TextView) findViewById(R.id.preferences_theme_text);
-                        themeText.setText(PreferencesService.getDrivingTheme().name());
+                        if (themeText != null)
+                            themeText.setText(PreferencesService.getDrivingTheme(getApplicationContext()).name());
                     }
                 });
         builderSingle.show();

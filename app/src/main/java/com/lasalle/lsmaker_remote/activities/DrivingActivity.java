@@ -74,7 +74,7 @@ public class DrivingActivity extends AppCompatActivity
         DrivingFragmentObserver.setRunning(true);
         Intent mDataSenderServiceIntent = new Intent(this, DataSenderService.class);
         startService(mDataSenderServiceIntent);
-        changeDrivingFragment(PreferencesService.getDrivingTheme());
+        changeDrivingFragment(PreferencesService.getDrivingTheme(getApplicationContext()));
     }
 
     @Override

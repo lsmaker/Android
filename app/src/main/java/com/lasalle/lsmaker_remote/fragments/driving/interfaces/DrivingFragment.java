@@ -24,7 +24,7 @@ public abstract class DrivingFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        isInverted = PreferencesService.isInvertMode();
+        isInverted = PreferencesService.isInvertMode(getContext());
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
