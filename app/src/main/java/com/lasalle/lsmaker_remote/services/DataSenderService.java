@@ -9,7 +9,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
 
 /**
  * Service that retrieve information from the current DrivingFragment and sends it to the
- * DeviceConnection service to communicate with the robot.
+ * Service to communicate with the robot.
  *
  * @author Eduard de Torres
  * @version 0.1.2

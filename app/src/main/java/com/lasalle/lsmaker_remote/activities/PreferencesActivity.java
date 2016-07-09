@@ -21,7 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.lasalle.lsmaker_remote.R;
-import com.lasalle.lsmaker_remote.services.BluetoothConnection;
+import com.lasalle.lsmaker_remote.services.BluetoothService;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
@@ -135,7 +135,7 @@ public class PreferencesActivity extends AppCompatActivity
     public void onDisconnectButtonClick (View view) {
         // TODO: Implement disconnection from Device.
         Log.d(this.getClass().getName(), "Disconnected!");
-        BluetoothConnection.getInstance().disconnect();
+        BluetoothService.disconnect();
     }
 
     public void onInvertControlsButtonClick (View view) {

@@ -36,5 +36,11 @@
     <string name="preferences_theme_title">Tema  de conducció</string>
     <string name="preferences_theme_picker_title">Escull mode de conducció</string>
 
+    <!-- Strings related to Bluetooth connection -->
+    <string name="bluetooth_not_compatible_title">No compatible amb BLE</string>
+    <string name="bluetooth_not_compatible_message">Ho sentim, però aquest dispositiu no és compatible amb Bluetooth Low Energy</string>
+    <string name="bluetooth_not_enabled_title">Bluetooth no activat</string>
+    <string name="bluetooth_not_enabled_message">No s\'ha pogut activar el Bluetooth. Sense Bluetooth no es podrà continuar.</string>
+
 
 </resources>

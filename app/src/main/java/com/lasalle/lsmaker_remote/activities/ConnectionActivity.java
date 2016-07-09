@@ -3,6 +3,13 @@ package com.lasalle.lsmaker_remote.activities;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.Activity;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
+import android.bluetooth.le.ScanFilter;
+import android.bluetooth.le.ScanSettings;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -12,6 +19,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,10 +28,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.lasalle.lsmaker_remote.R;
-import com.lasalle.lsmaker_remote.services.BluetoothConnection;
+import com.lasalle.lsmaker_remote.services.BluetoothService;
 import com.lasalle.lsmaker_remote.utils.Utils;
+
+import java.util.ArrayList;
 
 /**
  * A login screen that offers login via device-name/password (or pincode).
@@ -34,7 +45,7 @@ import com.lasalle.lsmaker_remote.utils.Utils;
 public class ConnectionActivity extends AppCompatActivity {
 
     /**
-     * Keep track of the login task to ensure we can cancel it if requested.
+     * Keeps track of the login task to ensure we can cancel it if requested.
      */
     private UserLoginTask mAuthTask = null;
 
@@ -42,6 +53,9 @@ public class ConnectionActivity extends AppCompatActivity {
     private AutoCompleteTextView deviceNameView;
     private EditText pincodeView;
     private View mProgressView;
+
+    // Bluetooth
+    private static final int REQUEST_ENABLE_BT = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,8 +99,51 @@ public class ConnectionActivity extends AppCompatActivity {
         }
 
         mProgressView = findViewById(R.id.login_progress_view);
+
+        boolean bluetoothCompatibility =
+                BluetoothService.checkDeviceCompatibility(getPackageManager(),
+                        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
+        if (!bluetoothCompatibility) {
+            showBluetoothNoCompatiblePopUp();
+        }
+
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BluetoothService.enableBluetooth(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BluetoothService.pauseBluetooth();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+
+            // When the request to enable Bluetooth returns
+            case REQUEST_ENABLE_BT:
+
+                if (resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(this, "Bluetooth has turned on ", Toast.LENGTH_SHORT).show();
+                    // Starts scanning for devices.
+                    BluetoothService.startScanningDevices();
+
+                } else {
+                    // User did not enable Bluetooth or an error occurred
+                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
+                    // Show an error pop up and finish the application.
+                    showBluetoothNotEnabledPopUp();
+                }
+                break;
+            default:
+                break;
+        }
+    }
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -99,6 +156,8 @@ public class ConnectionActivity extends AppCompatActivity {
         }
 
         Utils.hideKeyboard(this);
+
+        BluetoothService.enableBluetooth(this);
 
         // Reset errors.
         deviceNameView.setError(null);
@@ -144,12 +203,14 @@ public class ConnectionActivity extends AppCompatActivity {
 
     private boolean isEmailValid(String deviceName) {
         //TODO: Replace this with your own logic
-        return deviceName.length() >= 4;
+        //return deviceName.length() >= 4;
+        return true;
     }
 
     private boolean isPasswordValid(String pincode) {
         //TODO: Replace this with your own logic
-        return pincode.length() >= 4;
+        //return pincode.length() >= 4;
+        return true;
     }
 
     /**
@@ -178,11 +239,22 @@ public class ConnectionActivity extends AppCompatActivity {
         }
     }
 
+
     private void goToDrivingActivity() {
         final Intent intent = new Intent(this, DrivingActivity.class);
         startActivity(intent);
     }
 
+
+    /*
+     * Pop up messages
+     */
+
+    /**
+     * Shows a pop up informing the user that there's been an error during connection.
+     *
+     * @param message error text message to show to the user
+     */
     private void showConnectionErrorPopUp(String message) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
         builder.setTitle(getString(R.string.connection_error_title));
@@ -191,6 +263,37 @@ public class ConnectionActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 pincodeView.requestFocus();
                 pincodeView.setText("");
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Shows a pop up informing the user that the device isn't compatible with Bluetooth Low Energy
+     * and the app will close.
+     */
+    private void showBluetoothNoCompatiblePopUp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.bluetooth_not_compatible_title));
+        builder.setMessage(R.string.bluetooth_not_compatible_message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.show();
+    }
+
+    /**
+     * Shows a pop up informing the user that Bluetooth isn't enabled and the app will close.
+     */
+    private void showBluetoothNotEnabledPopUp() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.bluetooth_not_enabled_title));
+        builder.setMessage(R.string.bluetooth_not_enabled_message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
             }
         });
         builder.show();
@@ -212,7 +315,7 @@ public class ConnectionActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return BluetoothConnection.getInstance().connect(deviceName, pincode);
+            return BluetoothService.connect(deviceName, pincode);
         }
 
         @Override
