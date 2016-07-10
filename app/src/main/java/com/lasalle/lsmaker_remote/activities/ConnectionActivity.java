@@ -16,6 +16,7 @@ import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -43,6 +44,8 @@ import java.util.ArrayList;
  * @version 0.1.1
  */
 public class ConnectionActivity extends AppCompatActivity {
+
+    private static final String TAG = ConnectionActivity.class.getName();
 
     /**
      * Keeps track of the login task to ensure we can cancel it if requested.
@@ -100,18 +103,29 @@ public class ConnectionActivity extends AppCompatActivity {
 
         mProgressView = findViewById(R.id.login_progress_view);
 
-        boolean bluetoothCompatibility =
+        /*boolean bluetoothCompatibility =
                 BluetoothService.checkDeviceCompatibility(getPackageManager(),
                         (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
         if (!bluetoothCompatibility) {
             showBluetoothNoCompatiblePopUp();
-        }
+        }*/
+        service_init();
+
+
+
+        Log.d(TAG, "End of onCreate");
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        boolean bluetoothCompatibility =
+                BluetoothService.checkDeviceCompatibility(getPackageManager(),
+                        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
+        if (!bluetoothCompatibility) {
+            showBluetoothNoCompatiblePopUp();
+        }
         BluetoothService.enableBluetooth(this);
     }
 
@@ -119,6 +133,13 @@ public class ConnectionActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         BluetoothService.pauseBluetooth();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        BluetoothService.service_stop(this);
     }
 
     @Override
@@ -196,10 +217,11 @@ public class ConnectionActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(deviceName, pincode);
+            mAuthTask = new UserLoginTask(deviceName, pincode, getApplicationContext());
             mAuthTask.execute((Void) null);
         }
     }
+
 
     private boolean isEmailValid(String deviceName) {
         //TODO: Replace this with your own logic
@@ -243,6 +265,10 @@ public class ConnectionActivity extends AppCompatActivity {
     private void goToDrivingActivity() {
         final Intent intent = new Intent(this, DrivingActivity.class);
         startActivity(intent);
+    }
+
+    private void service_init() {
+        BluetoothService.service_init(this);
     }
 
 
@@ -307,15 +333,17 @@ public class ConnectionActivity extends AppCompatActivity {
 
         private final String deviceName;
         private final String pincode;
+        private final Context context;
 
-        UserLoginTask(String email, String password) {
+        UserLoginTask(String email, String password, Context context) {
             deviceName = email;
             pincode = password;
+            this.context = context;
         }
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            return BluetoothService.connect(deviceName, pincode);
+            return BluetoothService.connect(deviceName, pincode, context);
         }
 
         @Override
