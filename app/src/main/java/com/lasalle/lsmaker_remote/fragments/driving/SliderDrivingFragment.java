@@ -29,14 +29,20 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
  */
 public class SliderDrivingFragment extends DrivingFragment implements SensorEventListener {
 
+    private static final int X = 0;
+    private static final int Y = 1;
+    private static final int Z = 2;
+
     private VerticalSeekBar vSeekBar;
     private Button forwardFab;
     private Button backwardFab;
     private SensorManager senSensorManager;
     private Sensor senAccelerometer;
-    private float x;
-    private float y;
-    private float z;
+
+    // Accelerometer data.
+    private double[] data;
+    private double initialYAngle;
+    private double currentYAngle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -105,7 +111,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        DrivingFragmentObserver.setAccelerationAndTurning(getAcceleration(), getTurning());
+                        initialYAngle = getYAngle();
                         break;
                     case MotionEvent.ACTION_UP:
                         DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
@@ -121,7 +127,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        DrivingFragmentObserver.setAccelerationAndTurning(getAcceleration(), getTurning());
+                        initialYAngle = getYAngle();
                         break;
                     case MotionEvent.ACTION_UP:
                         DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
@@ -132,6 +138,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         });
 
         // Accelerometer
+        data = new double[3];
         senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
         senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
@@ -152,21 +159,26 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
 
     @Override
     public int getTurning() {
-        Log.d("DRIVING", "X: " + x + " Y: " + y + " Z: " + z);
+        if (forwardFab.isPressed() || backwardFab.isPressed()) {
+            // TODO: Implement truly
+            currentYAngle = getYAngle();
+            Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
+            return (int) (initialYAngle - currentYAngle);
+        }
         return 0;
     }
+
 
     @Override
     public void onSensorChanged(SensorEvent event) {
         Sensor mySensor = event.sensor;
 
-        if (mySensor.getType() == Sensor.TYPE_ACCELEROMETER) {
-            x = event.values[0];
-            y = event.values[1];
-            z = event.values[2];
-        }
+        if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
+            data[X] = event.values[X];
+            data[Y] = event.values[Y];
+            data[Z] = event.values[Z];
 
-        if (forwardFab.isPressed() || backwardFab.isPressed()) {
+            DrivingFragmentObserver.setAcceleration(getAcceleration());
             DrivingFragmentObserver.setTurning(getTurning());
         }
     }
@@ -174,6 +186,15 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
+    }
+
+    public double getYAngle() {
+        double yAngle;
+
+        double g = Math.sqrt(Math.pow(data[X], 2) + Math.pow(data[Y], 2) + Math.pow(data[Z], 2));
+        yAngle = Math.cos(data[X] / g);
+
+        return yAngle;
     }
 
 }

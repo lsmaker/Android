@@ -1,6 +1,8 @@
 package com.lasalle.lsmaker_remote.fragments.driving.interfaces;
 
 
+import android.util.Log;
+
 /**
  * Observer for DrivingFragment class.
  * Provides updated information on acceleration and turning values to be checked by DataSenderService.
@@ -27,6 +29,7 @@ public class DrivingFragmentObserver {
     }
 
     public static void setAcceleration(int acceleration) {
+        Log.d("ACCELERATION", "Acceleration: "+ acceleration);
         getInstance().acceleration = acceleration;
     }
 

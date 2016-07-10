@@ -305,30 +305,15 @@ public class BluetoothService {
     /*
      * Getters and setters
      */
-    public String getDeviceName() {
-        return deviceName;
-    }
 
-    public void setDeviceName(String deviceName) {
-        BluetoothService.deviceName = deviceName;
-    }
-
-    public String getPincode() {
-        return pincode;
-    }
-
-    public void setPincode(String pincode) {
-        BluetoothService.pincode = pincode;
-    }
-
-    public String getBluetoothDeviceName() {
+    public static String getBluetoothDeviceName() {
         if (mDevice == null) {
             return null;
         }
         return mDevice.getName();
     }
 
-    public String getBluetoothDeviceAddress() {
+    public static String getBluetoothDeviceAddress() {
         if (mDevice == null) {
             return null;
         }

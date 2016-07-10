@@ -40,6 +40,8 @@ public class DataSenderService extends IntentService {
             int turning = DrivingFragmentObserver.getTurning();
 
             Log.d("DATASENDER", acceleration + " " + turning);
+            if (acceleration != 0 || turning != 0)
+                BluetoothService.sendMessage("MOVEMENT-" + acceleration + "-" + turning);
 
             try {
                 Thread.sleep(1000);

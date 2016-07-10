@@ -35,6 +35,8 @@
     <string name="preferences_invert_description">Inverteix de posició els controls de conducció</string>
     <string name="preferences_theme_title">Tema  de conducció</string>
     <string name="preferences_theme_picker_title">Escull mode de conducció</string>
+    <string name="preferences_device_name_title">Nom del dispositiu:</string>
+    <string name="preferences_device_address_title">Adreça del dispositiu:</string>
 
     <!-- Strings related to Bluetooth connection -->
     <string name="bluetooth_not_compatible_title">No compatible amb BLE</string>

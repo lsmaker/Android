@@ -42,7 +42,6 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     private double currentXAngle;
     private double initialYAngle;
     private double currentYAngle;
-    private double YAngle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,11 +106,10 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     @Override
     public int getAcceleration() {
         if (runFab.isPressed()) {
-            // TODO: Implement
-            //currentXAngle = getXAngle();
-            //Log.d("DRIVING", "X_ANGLE: " + currentXAngle);
+            // TODO: Implement truly
+            currentXAngle = getXAngle();
             Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
-            return 0;
+            return (int)(currentXAngle * 100);
         }
 
         return 0;
@@ -120,8 +118,10 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     @Override
     public int getTurning() {
         if (runFab.isPressed()) {
-        // TODO: Implement
-            return 0;
+            // TODO: Implement truly
+            currentYAngle = getYAngle();
+            //Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
+            return (int) (initialYAngle - currentYAngle);
         }
         return 0;
     }
@@ -157,8 +157,11 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
     }
 
     public double getYAngle() {
+        double yAngle;
 
+        double g = Math.sqrt(Math.pow(data[X], 2) + Math.pow(data[Y], 2) + Math.pow(data[Z], 2));
+        yAngle = Math.cos(data[X] / g);
 
-        return YAngle;
+        return yAngle;
     }
 }

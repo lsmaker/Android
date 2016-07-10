@@ -66,6 +66,16 @@ public class PreferencesActivity extends AppCompatActivity
             mainLayout.addView(child);
         }
 
+        TextView deviceNameView = (TextView) findViewById(R.id.preferences_device_name);
+        if (deviceNameView != null) {
+            deviceNameView.setText(BluetoothService.getBluetoothDeviceName());
+        }
+
+        TextView deviceAddressView = (TextView) findViewById(R.id.preferences_device_address);
+        if (deviceAddressView != null) {
+            deviceAddressView.setText(BluetoothService.getBluetoothDeviceAddress());
+        }
+
     }
 
     @Override
@@ -124,6 +134,7 @@ public class PreferencesActivity extends AppCompatActivity
         if (id == R.id.nav_driving) {
             Intent i = new Intent(this, DrivingActivity.class);
             startActivity(i);
+            finish();
         } else if (id == R.id.nav_configuration) {
             // Nothing to do.
         }
@@ -133,9 +144,11 @@ public class PreferencesActivity extends AppCompatActivity
     }
 
     public void onDisconnectButtonClick (View view) {
-        // TODO: Implement disconnection from Device.
         Log.d(this.getClass().getName(), "Disconnected!");
         BluetoothService.disconnect();
+        final Intent intent = new Intent(this, ConnectionActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void onInvertControlsButtonClick (View view) {

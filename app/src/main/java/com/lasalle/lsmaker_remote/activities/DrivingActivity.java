@@ -149,6 +149,7 @@ public class DrivingActivity extends AppCompatActivity
         } else if (id == R.id.nav_configuration) {
             Intent i = new Intent(this, PreferencesActivity.class);
             startActivity(i);
+            finish();
         }
 
         drawer.closeDrawer(GravityCompat.START);
