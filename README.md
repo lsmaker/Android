@@ -1,1 +1,3 @@
-# LsMaker_RemoteApp_Android
+
+# Android
+Source code for the LSMaker Android App.
