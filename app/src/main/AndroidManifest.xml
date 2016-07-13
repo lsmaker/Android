@@ -20,8 +20,7 @@
             android:exported="false"/>
 
         <activity
-            android:name=".activities.ConnectionActivity"
-            android:label="@string/connection_activity_label">
+            android:name=".activities.ConnectionActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,13 +32,11 @@
 
         <activity
             android:name=".activities.DrivingActivity"
-            android:label="@string/title_activity_driving"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="landscape"/>
 
         <activity
             android:name=".activities.PreferencesActivity"
-            android:label="@string/title_activity_settings"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="landscape" />
 

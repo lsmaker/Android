@@ -8,14 +8,14 @@
         android:id="@+id/device_list_item_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textColor="@android:color/white"/>
 
     <TextView
         android:id="@+id/device_list_item_address"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="10sp"
+        android:textSize="12sp"
         android:textColor="@android:color/white" />
 
     <TextView

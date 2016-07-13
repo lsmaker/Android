@@ -44,6 +44,9 @@ public class PreferencesActivity extends AppCompatActivity
 
         // Drawer configuration.
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        if (toolbar != null) {
+            toolbar.setTitle(R.string.preferences_activity_title);
+        }
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

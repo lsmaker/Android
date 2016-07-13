@@ -1,18 +1,15 @@
 package com.lasalle.lsmaker_remote.adapters;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.lasalle.lsmaker_remote.R;
+import com.lasalle.lsmaker_remote.activities.ConnectionActivity;
 
 import java.util.List;
 import java.util.Map;
@@ -37,7 +34,9 @@ public class DeviceListAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return devices.size();
+        if (devices != null)
+            return devices.size();
+        return 0;
     }
 
     @Override
@@ -78,6 +77,13 @@ public class DeviceListAdapter extends BaseAdapter {
         return vg;
     }
 
+    @Override
+    public void notifyDataSetChanged() {
+        super.notifyDataSetChanged();
+        if (devices != null && devices.size() > 0) {
+            ((ConnectionActivity) context).showListHasResults(true);
+        }
+    }
 
     public List<BluetoothDevice> getDevices() {
         return devices;

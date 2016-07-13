@@ -14,17 +14,12 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
-import android.widget.AutoCompleteTextView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,10 +45,9 @@ public class ConnectionActivity extends AppCompatActivity {
     private BluetoothConnectionTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView deviceNameView;
-    private EditText pincodeView;
+    //private AutoCompleteTextView deviceNameView;
+    //private EditText pincodeView;
     private View mProgressView;
-    private ListView devicesListView;
 
     private DeviceListAdapter deviceListAdapter;
 
@@ -76,6 +70,11 @@ public class ConnectionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_connection);
         // Screen orientation's configuration.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setTitle(R.string.connection_activity_title);
+        }
         
         // Set up the login form.
         /*deviceNameView = (AutoCompleteTextView) findViewById(R.id.device_name);
@@ -136,7 +135,7 @@ public class ConnectionActivity extends AppCompatActivity {
             service_init();
             BluetoothService.enableBluetooth(this);
 
-            devicesListView = (ListView) findViewById(R.id.connection_devices_listview);
+            ListView devicesListView = (ListView) findViewById(R.id.connection_devices_listview);
             if (devicesListView != null) {
                 deviceListAdapter = new DeviceListAdapter(this,
                         BluetoothService.getDeviceList(), BluetoothService.getDevRssiValues());
@@ -157,7 +156,7 @@ public class ConnectionActivity extends AppCompatActivity {
     public void onDestroy() {
         super.onDestroy();
 
-        BluetoothService.service_stop(this);
+        BluetoothService.service_stop();
     }
 
     @Override
@@ -242,7 +241,7 @@ public class ConnectionActivity extends AppCompatActivity {
     }
 
 
-    private boolean isEmailValid(String deviceName) {
+    /*private boolean isEmailValid(String deviceName) {
         //TODO: Replace this with your own logic
         //return deviceName.length() >= 4;
         return true;
@@ -252,7 +251,7 @@ public class ConnectionActivity extends AppCompatActivity {
         //TODO: Replace this with your own logic
         //return pincode.length() >= 4;
         return true;
-    }
+    }*/
 
     /**
      * Shows the progress UI and hides the login form.
@@ -306,8 +305,8 @@ public class ConnectionActivity extends AppCompatActivity {
         builder.setMessage(message);
         builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                pincodeView.requestFocus();
-                pincodeView.setText("");
+                //pincodeView.requestFocus();
+                //pincodeView.setText("");
             }
         });
         builder.show();
@@ -344,11 +343,22 @@ public class ConnectionActivity extends AppCompatActivity {
         builder.show();
     }
 
+    public void showListHasResults(boolean hasDevices) {
+        TextView noDevicesText = (TextView) findViewById(R.id.connection_devices_not_found_text);
+        if (noDevicesText != null) {
+            if (hasDevices) {
+                noDevicesText.setVisibility(View.GONE);
+            } else {
+                noDevicesText.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+    /*public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
 
         private final String deviceName;
         private final String pincode;
@@ -382,7 +392,7 @@ public class ConnectionActivity extends AppCompatActivity {
             mAuthTask = null;
             showProgress(false);
         }
-    }
+    }*/
 
     /**
      * Represents an asynchronous login/registration task used to authenticate

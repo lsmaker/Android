@@ -49,6 +49,7 @@ public class BluetoothService {
     private static String pincode;
     private static BaseAdapter deviceAdapter;
     private static boolean serviceStarted = false;
+    private static Activity binderActivity = null;
 
     // Bluetooth atributesç
     private static List<BluetoothDevice> deviceList;
@@ -58,7 +59,6 @@ public class BluetoothService {
     private static Handler mHandler;
     private static BluetoothAdapter mBluetoothAdapter = null;
     private static int mState = UART_PROFILE_DISCONNECTED;
-
 
     // UART service connected/disconnected
     private static ServiceConnection mServiceConnection;
@@ -252,24 +252,25 @@ public class BluetoothService {
         }
     }
 
-    public static void service_init(Activity callerActivity) {
-        initialize(callerActivity);
-        Intent bindIntent = new Intent(callerActivity, UartService.class);
-        callerActivity.bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    public static void service_init(Activity binderActivity) {
+        BluetoothService.binderActivity = binderActivity;
+        initialize(binderActivity);
+        Intent bindIntent = new Intent(binderActivity, UartService.class);
+        binderActivity.bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
-        LocalBroadcastManager.getInstance(callerActivity).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
+        LocalBroadcastManager.getInstance(binderActivity).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
         serviceStarted = true;
     }
 
-    public static void service_stop(Activity callerActivity) {
+    public static void service_stop() {
         if (serviceStarted) {
             try {
-                LocalBroadcastManager.getInstance(callerActivity).unregisterReceiver(UARTStatusChangeReceiver);
+                LocalBroadcastManager.getInstance(binderActivity).unregisterReceiver(UARTStatusChangeReceiver);
             } catch (Exception ignore) {
                 Log.e(TAG, ignore.toString());
             }
 
-            callerActivity.unbindService(mServiceConnection);
+            binderActivity.unbindService(mServiceConnection);
             if (uartService != null) {
                 uartService.stopSelf();
                 uartService = null;
@@ -287,8 +288,6 @@ public class BluetoothService {
         intentFilter.addAction(UartService.DEVICE_DOES_NOT_SUPPORT_UART);
         return intentFilter;
     }
-
-
 
 
 

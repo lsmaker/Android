@@ -102,22 +102,26 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_marginBottom="8dp"
         android:text="@string/connection_devices_list_title"
-        android:textColor="@android:color/white"/>
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:textSize="28sp"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:text="@string/connection_devices_list_tip"
-        android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/white"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/connection_devices_not_found_text"
-        android:text="@string/connection_device_not_found_text"/>
+        android:text="@string/connection_device_not_found_text"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"/>
 
     <ListView
         android:layout_width="match_parent"
