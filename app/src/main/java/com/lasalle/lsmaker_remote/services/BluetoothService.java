@@ -15,12 +15,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.BaseAdapter;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Service for communication with LsMaker's Bluetooth.
@@ -45,6 +47,8 @@ public class BluetoothService {
     // Own atributes
     private static String deviceName;
     private static String pincode;
+    private static BaseAdapter deviceAdapter;
+    private static boolean serviceStarted = false;
 
     // Bluetooth atributesç
     private static List<BluetoothDevice> deviceList;
@@ -118,39 +122,7 @@ public class BluetoothService {
         };
     }
 
-
-    /*
-     * A dummy authentication store containing known user names and passwords.
-     * TODO: remove after connecting to a real authentication system.
-     */
-    /*private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "eduard:1234",
-            "demo:12345"
-    };*/
-
     public static boolean connect(String deviceId, String pincode, Context context) {
-        // Dummy connection
-        /*try {
-            // Simulate network access.
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            return false;
-        }
-
-        for (String credential : DUMMY_CREDENTIALS) {
-            String[] pieces = credential.split(":");
-            if (pieces[0].equals(device)) {
-                // Account exists, return true if the password matches.
-                return pieces[1].equals(pincode);
-            }
-        }*/
-
-        Log.d(TAG, "CONNECT");
-        uartService = new UartService();
-        Log.d(TAG, "onServiceConnected uartService= " + uartService);
-        if (!uartService.initialize(context)) {
-            Log.e(TAG, "Unable to initialize Bluetooth");
-        }
 
         // Lookup for a matching device from the scanned device's list
         for (BluetoothDevice device: deviceList) {
@@ -158,22 +130,31 @@ public class BluetoothService {
             Log.d(TAG, "Device name: "+ device.getName());
             Log.d(TAG, "Device address: "+ device.getAddress());
             if (device.getName()!= null && device.getName().equals(deviceId)) {
-                String deviceAddress = device.getAddress();
-                mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
-
-                Log.d(TAG, "... device.address==" + mDevice + "mserviceValue" + uartService);
-                if (uartService.connect(deviceAddress)) {
-                    BluetoothService.deviceName = deviceId;
-                    BluetoothService.pincode = pincode;
-                    mBluetoothAdapter.stopLeScan(mLeScanCallback);
-                    return true;
-                } else {
-                    return false;
-                }
+                connect(device, context);
             }
         }
 
         return false;
+    }
+
+    public static Boolean connect(BluetoothDevice device, Context context) {
+        Log.d(TAG, "CONNECT");
+        uartService = new UartService();
+        Log.d(TAG, "onServiceConnected uartService= " + uartService);
+        if (!uartService.initialize(context)) {
+            Log.e(TAG, "Unable to initialize Bluetooth");
+        }
+
+        String deviceAddress = device.getAddress();
+        mDevice = BluetoothAdapter.getDefaultAdapter().getRemoteDevice(deviceAddress);
+
+        Log.d(TAG, "... device.address==" + mDevice + "mserviceValue" + uartService);
+        if (uartService.connect(deviceAddress)) {
+            mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static boolean sendMessage(String message) {
@@ -264,6 +245,10 @@ public class BluetoothService {
         devRssiValues.put(device.getAddress(), rssi);
         if (!deviceFound) {
             deviceList.add(device);
+            devRssiValues.put(device.getAddress(), rssi);
+            if (deviceAdapter != null) {
+                deviceAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -273,18 +258,23 @@ public class BluetoothService {
         callerActivity.bindService(bindIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
 
         LocalBroadcastManager.getInstance(callerActivity).registerReceiver(UARTStatusChangeReceiver, makeGattUpdateIntentFilter());
+        serviceStarted = true;
     }
 
     public static void service_stop(Activity callerActivity) {
-        try {
-            LocalBroadcastManager.getInstance(callerActivity).unregisterReceiver(UARTStatusChangeReceiver);
-        } catch (Exception ignore) {
-            Log.e(TAG, ignore.toString());
-        }
-        callerActivity.unbindService(mServiceConnection);
-        if (uartService != null) {
-            uartService.stopSelf();
-            uartService = null;
+        if (serviceStarted) {
+            try {
+                LocalBroadcastManager.getInstance(callerActivity).unregisterReceiver(UARTStatusChangeReceiver);
+            } catch (Exception ignore) {
+                Log.e(TAG, ignore.toString());
+            }
+
+            callerActivity.unbindService(mServiceConnection);
+            if (uartService != null) {
+                uartService.stopSelf();
+                uartService = null;
+            }
+            serviceStarted = false;
         }
     }
 
@@ -318,6 +308,18 @@ public class BluetoothService {
             return null;
         }
         return mDevice.getAddress();
+    }
+
+    public static List<BluetoothDevice> getDeviceList() {
+        return deviceList;
+    }
+
+    public static Map<String, Integer> getDevRssiValues() {
+        return BluetoothService.devRssiValues;
+    }
+
+    public static void setDeviceAdapter(BaseAdapter deviceAdapter) {
+        BluetoothService.deviceAdapter = deviceAdapter;
     }
 
 }

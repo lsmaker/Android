@@ -43,6 +43,9 @@
     <string name="bluetooth_not_compatible_message">Ho sentim, però aquest dispositiu no és compatible amb Bluetooth Low Energy</string>
     <string name="bluetooth_not_enabled_title">Bluetooth no activat</string>
     <string name="bluetooth_not_enabled_message">No s\'ha pogut activar el Bluetooth. Sense Bluetooth no es podrà continuar.</string>
+    <string name="connection_devices_list_title">Dispositius a l\'abast</string>
+    <string name="connection_devices_list_tip">Sel·lecciona el dispositiu al qual et vols connectar</string>
+    <string name="connection_device_not_found_text">No s\'han trobat dispositius a l\'abast</string>
 
 
 </resources>

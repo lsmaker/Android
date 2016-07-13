@@ -4,38 +4,35 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
-import android.bluetooth.le.ScanFilter;
-import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lasalle.lsmaker_remote.R;
+import com.lasalle.lsmaker_remote.adapters.DeviceListAdapter;
 import com.lasalle.lsmaker_remote.services.BluetoothService;
 import com.lasalle.lsmaker_remote.utils.Utils;
-
-import java.util.ArrayList;
 
 /**
  * A login screen that offers login via device-name/password (or pincode).
@@ -50,15 +47,28 @@ public class ConnectionActivity extends AppCompatActivity {
     /**
      * Keeps track of the login task to ensure we can cancel it if requested.
      */
-    private UserLoginTask mAuthTask = null;
+    private BluetoothConnectionTask mAuthTask = null;
 
     // UI references.
     private AutoCompleteTextView deviceNameView;
     private EditText pincodeView;
     private View mProgressView;
+    private ListView devicesListView;
+
+    private DeviceListAdapter deviceListAdapter;
 
     // Bluetooth
     private static final int REQUEST_ENABLE_BT = 1;
+
+    // ListView listener
+    private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
+
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            BluetoothDevice device = deviceListAdapter.getDevices().get(position);
+            attemptLogin(device);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +78,7 @@ public class ConnectionActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         
         // Set up the login form.
-        deviceNameView = (AutoCompleteTextView) findViewById(R.id.device_name);
+        /*deviceNameView = (AutoCompleteTextView) findViewById(R.id.device_name);
         deviceNameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -99,34 +109,42 @@ public class ConnectionActivity extends AppCompatActivity {
                     attemptLogin();
                 }
             });
-        }
+        }*/
 
         mProgressView = findViewById(R.id.login_progress_view);
-
-        /*boolean bluetoothCompatibility =
-                BluetoothService.checkDeviceCompatibility(getPackageManager(),
-                        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
-        if (!bluetoothCompatibility) {
-            showBluetoothNoCompatiblePopUp();
-        }*/
-        service_init();
-
-
-
-        Log.d(TAG, "End of onCreate");
 
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        boolean bluetoothCompatibility =
-                BluetoothService.checkDeviceCompatibility(getPackageManager(),
-                        (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
-        if (!bluetoothCompatibility) {
-            showBluetoothNoCompatiblePopUp();
+
+        // After requesting a change of orientation, the activity will be destroyed and recreated.
+        // We only want to start Bluetooth connections during the second "creation".
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Log.d(TAG, "LANDSCAPE");
+
+
+            boolean bluetoothCompatibility =
+                    BluetoothService.checkDeviceCompatibility(getPackageManager(),
+                            (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
+            if (!bluetoothCompatibility) {
+                showBluetoothNoCompatiblePopUp();
+            }
+
+
+            service_init();
+            BluetoothService.enableBluetooth(this);
+
+            devicesListView = (ListView) findViewById(R.id.connection_devices_listview);
+            if (devicesListView != null) {
+                deviceListAdapter = new DeviceListAdapter(this,
+                        BluetoothService.getDeviceList(), BluetoothService.getDevRssiValues());
+                devicesListView.setAdapter(deviceListAdapter);
+                devicesListView.setOnItemClickListener(mDeviceClickListener);
+                BluetoothService.setDeviceAdapter(deviceListAdapter);
+            }
         }
-        BluetoothService.enableBluetooth(this);
     }
 
     @Override
@@ -171,7 +189,7 @@ public class ConnectionActivity extends AppCompatActivity {
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void attemptLogin() {
+    private void attemptLogin(BluetoothDevice device) {
         if (mAuthTask != null) {
             return;
         }
@@ -180,6 +198,7 @@ public class ConnectionActivity extends AppCompatActivity {
 
         BluetoothService.enableBluetooth(this);
 
+        /*
         // Reset errors.
         deviceNameView.setError(null);
         pincodeView.setError(null);
@@ -213,13 +232,13 @@ public class ConnectionActivity extends AppCompatActivity {
             // There was an error; don't attempt login and focus the first
             // form field with an error.
             focusView.requestFocus();
-        } else {
+        } else {*/
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(deviceName, pincode, getApplicationContext());
+            mAuthTask = new BluetoothConnectionTask(device, getApplicationContext());
             mAuthTask.execute((Void) null);
-        }
+        //}
     }
 
 
@@ -344,6 +363,44 @@ public class ConnectionActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... params) {
             return BluetoothService.connect(deviceName, pincode, context);
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (success) {
+                goToDrivingActivity();
+            } else {
+                showConnectionErrorPopUp(getString(R.string.connection_error_message));
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class BluetoothConnectionTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final BluetoothDevice device;
+        private final Context context;
+
+        BluetoothConnectionTask(BluetoothDevice device, Context context) {
+            this.device = device;
+            this.context = context;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            return BluetoothService.connect(device, context);
         }
 
         @Override
