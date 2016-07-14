@@ -101,7 +101,9 @@ public class PreferencesActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            Intent i = new Intent(this, DrivingActivity.class);
+            startActivity(i);
+            finish();
         }
     }
 

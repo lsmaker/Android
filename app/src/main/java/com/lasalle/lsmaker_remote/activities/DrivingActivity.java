@@ -115,14 +115,15 @@ public class DrivingActivity extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            // The Driving activity is our main activity, so we want to disable it.
+            //super.onBackPressed();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.driving, menu);
+        //getMenuInflater().inflate(R.menu.driving, menu);
         return true;
     }
 
