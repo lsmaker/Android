@@ -2,6 +2,6 @@
 <resources>
     <color name="colorPrimary">#3c3c3c</color>
     <color name="colorPrimaryDark">#1e1e1e</color>
-    <color name="colorSalle">#6bb1e2</color>
+    <color name="colorSalle">#6aade4</color>
     <color name="colorOrangeSalle">#ff890d</color>
 </resources>
