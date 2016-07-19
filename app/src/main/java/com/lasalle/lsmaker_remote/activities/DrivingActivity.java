@@ -23,7 +23,9 @@ import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Activity that manages the driving view.
- * Contains a fragment to be able to choose between different driving views.
+ *
+ * Contains a fragment to be able to choose between different driving views and is contained inside
+ * a navigational drawer.
  *
  * @author Eduard de Torres
  * @version 0.1.2
@@ -87,7 +89,7 @@ public class DrivingActivity extends AppCompatActivity
     }
 
     /**
-     * Changes the current driving fragment.
+     * Changes the current driving fragment for the one specified as a parameter
      *
      * @param theme DrivingTheme value to choose as driving view
      */
@@ -148,11 +150,16 @@ public class DrivingActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
         if (id == R.id.nav_driving) {
-            // Nothing to do.
+            // Driving view selected
+            // Nothing to do as we already are on the driving activity.
         } else if (id == R.id.nav_configuration) {
+            // Configuration or preferences view selected
             Intent i = new Intent(this, PreferencesActivity.class);
             startActivity(i);
+            // After starting the activity, we will "kill" the current activity to prevent the
+            // navigation stack from growing without stop.
             finish();
         }
 

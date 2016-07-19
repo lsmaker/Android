@@ -25,7 +25,10 @@ import com.lasalle.lsmaker_remote.services.BluetoothService;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
- * Activity that manages the settings view.
+ * Activity that manages the preferences view.
+ *
+ * The preferences' activity is contained inside a navigation drawer and implements every
+ * functionality related to the managing of the app's preferences.
  *
  * @author Eduard de Torres
  * @version 1.0.0
