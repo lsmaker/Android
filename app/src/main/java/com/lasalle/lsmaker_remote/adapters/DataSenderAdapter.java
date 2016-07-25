@@ -195,7 +195,7 @@ public class DataSenderAdapter {
      *
      * @return a frame to be sent to the device as a byte array
      */
-    public byte[] generateReturnAskForPositionFrame (int x, int y, int z) {
+    public byte[] generateReturnAskForPositionFrame (short x, short y, short z) {
         // First of all, we must ensure that the given data is between the correct bounds.
         correctData(x, 0, 360);
         correctData(y, 0, 360);
@@ -211,9 +211,9 @@ public class DataSenderAdapter {
         // Puts the OPCODE to the buffer.
         buffer.put(RETURN_OF_ASK_FOR_POSITION_OPCODE);
         // Puts the payload to the buffer.
-        buffer.putInt(x);
-        buffer.putInt(y);
-        buffer.putInt(z);
+        buffer.putShort(x);
+        buffer.putShort(y);
+        buffer.putShort(z);
 
         byte[] frame = buffer.array();
         return frame;
@@ -229,7 +229,7 @@ public class DataSenderAdapter {
      *
      * @return a frame to be sent to the device as a byte array
      */
-    public byte[] generateReturnAskForPositionFrameWithAck (int x, int y, int z) {
+    public byte[] generateReturnAskForPositionFrameWithAck (short x, short y, short z) {
         byte[] frame = generateReturnAskForPositionFrame(x, y, z);
         frame[0] = generateHeader(true, false, false);
         return frame;
@@ -277,7 +277,7 @@ public class DataSenderAdapter {
      *
      * @return a frame to be sent to the device as a byte array
      */
-    public byte[] generateReturnAskForOrientationFrame (int degrees) {
+    public byte[] generateReturnAskForOrientationFrame (short degrees) {
         // First of all, we must ensure that the given data is between the correct bounds.
         correctData(degrees, 0, 360);
 
@@ -291,7 +291,7 @@ public class DataSenderAdapter {
         // Puts the OPCODE to the buffer.
         buffer.put(RETURN_OF_ASK_FOR_ORIENTATION_OPCODE);
         // Puts the payload to the buffer.
-        buffer.putInt(degrees);
+        buffer.putShort(degrees);
 
         byte[] frame = buffer.array();
         return frame;
@@ -306,7 +306,7 @@ public class DataSenderAdapter {
      *
      * @return a frame to be sent to the device as a byte array
      */
-    public byte[] generateReturnAskForOrientationFrameWithAck (int degrees) {
+    public byte[] generateReturnAskForOrientationFrameWithAck (short degrees) {
         byte[] frame = generateReturnAskForOrientationFrame(degrees);
         frame[0] = generateHeader(true, false, false);
         return frame;
