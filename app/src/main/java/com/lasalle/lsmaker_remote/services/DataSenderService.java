@@ -4,7 +4,7 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
 
-import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
+import com.lasalle.lsmaker_remote.adapters.DataSenderAdapter;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 
 /**
@@ -12,7 +12,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  * Service to communicate with the robot.
  *
  * @author Eduard de Torres
- * @version 0.1.2
+ * @version 1.0.0
  */
 public class DataSenderService extends IntentService {
 
@@ -34,14 +34,18 @@ public class DataSenderService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent workIntent) {
+        DataSenderAdapter dataSenderAdapter = new DataSenderAdapter();
 
         while (DrivingFragmentObserver.isRunning()) {
-            int acceleration = DrivingFragmentObserver.getAcceleration();
-            int turning = DrivingFragmentObserver.getTurning();
+            int speed = DrivingFragmentObserver.getSpeed();
+            int turn = DrivingFragmentObserver.getTurn();
+            int acceleration = 0;
 
-            Log.d("DATASENDER", acceleration + " " + turning);
-            if (acceleration != 0 || turning != 0)
-                BluetoothService.sendMessage("MOVEMENT-" + acceleration + "-" + turning);
+            Log.d("DATASENDER", speed + " " + turn);
+            if (speed != 0 || turn != 0) {
+                BluetoothService.sendMessage(
+                        dataSenderAdapter.generateMovementFrame(speed, acceleration, turn));
+            }
 
             try {
                 Thread.sleep(1000);

@@ -17,24 +17,24 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * Service for communication with LsMaker's Bluetooth.
  *
  * @author Eduard de Torres
- * @version 0.1.1
+ * @version 1.0.1
  */
 public class BluetoothService {
     // Constants
     private static final String TAG = "BLUETOOTH_SERVICE";
 
-    private static final long SCAN_PERIOD = 10000; //scanning for 10 seconds
+    public final static String SCAN_STOPPED = "com.lasalle.lsmaker_remote.ACTION_SCAN_STOPPED";
+
+    private static final long SCAN_PERIOD = 5000; //scanning for 5 seconds
     private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
@@ -44,14 +44,12 @@ public class BluetoothService {
     private static final int STATE_OFF = 10;
 
 
-    // Own atributes
-    private static String deviceName;
-    private static String pincode;
+    // Own attributes
     private static BaseAdapter deviceAdapter;
     private static boolean serviceStarted = false;
     private static Activity binderActivity = null;
 
-    // Bluetooth atributesç
+    // Bluetooth attributes
     private static List<BluetoothDevice> deviceList;
     private static Map<String, Integer> devRssiValues;
     private static BluetoothDevice mDevice = null;
@@ -157,15 +155,11 @@ public class BluetoothService {
         }
     }
 
-    public static boolean sendMessage(String message) {
+    public static boolean sendMessage(byte[] message) {
         byte[] value;
-        try {
-            //send data to service
-            value = message.getBytes("UTF-8");
-            uartService.writeRXCharacteristic(value);
-        } catch (UnsupportedEncodingException e) {
-            return false;
-        }
+        //send data to service
+        uartService.writeRXCharacteristic(message);
+
         return true;
     }
 
@@ -217,17 +211,20 @@ public class BluetoothService {
         Log.d(TAG, "Scan Le Device: "+ enable);
         if (enable) {
             // Stops scanning after a pre-defined scan period.
-            /*mHandler.postDelayed(new Runnable() {
+            mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
                     mBluetoothAdapter.stopLeScan(mLeScanCallback);
-
+                    Intent intent = new Intent(SCAN_STOPPED);
+                    binderActivity.sendBroadcast(intent);
                 }
-            }, SCAN_PERIOD);*/
+            }, SCAN_PERIOD);
 
             mBluetoothAdapter.startLeScan(mLeScanCallback);
         } else {
             mBluetoothAdapter.stopLeScan(mLeScanCallback);
+            Intent intent = new Intent(SCAN_STOPPED);
+            binderActivity.sendBroadcast(intent);
         }
 
     }

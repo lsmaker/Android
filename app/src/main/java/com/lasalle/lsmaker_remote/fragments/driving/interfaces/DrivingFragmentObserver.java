@@ -5,14 +5,14 @@ import android.util.Log;
 
 /**
  * Observer for DrivingFragment class.
- * Provides updated information on acceleration and turning values to be checked by DataSenderService.
+ * Provides updated information on speed and turn values to be checked by DataSenderService.
  *
  * @author Eduard de Torres
- * @version 1.1.0
+ * @version 1.1.1
  */
 public class DrivingFragmentObserver {
-    private int acceleration;
-    private int turning;
+    private int speed;
+    private int turn;
     private boolean running;
 
     // Singleton synchronized implementation.
@@ -24,26 +24,26 @@ public class DrivingFragmentObserver {
         return instance;
     }
 
-    public static int getAcceleration() {
-        return getInstance().acceleration;
+    public static int getSpeed() {
+        return getInstance().speed;
     }
 
-    public static void setAcceleration(int acceleration) {
-        Log.d("ACCELERATION", "Acceleration: "+ acceleration);
-        getInstance().acceleration = acceleration;
+    public static void setSpeed(int speed) {
+        Log.d("ACCELERATION", "Acceleration: "+ speed);
+        getInstance().speed = speed;
     }
 
-    public static int getTurning() {
-        return getInstance().turning;
+    public static int getTurn() {
+        return getInstance().turn;
     }
 
-    public static void setTurning(int turning) {
-        getInstance().turning = turning;
+    public static void setTurn(int turn) {
+        getInstance().turn = turn;
     }
 
-    public static void setAccelerationAndTurning(int acceleration, int turning) {
-        setAcceleration(acceleration);
-        setTurning(turning);
+    public static void setSpeedAndTurn(int speed, int turn) {
+        setSpeed(speed);
+        setTurn(turn);
     }
 
     /**

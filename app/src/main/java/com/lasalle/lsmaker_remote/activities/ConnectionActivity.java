@@ -6,9 +6,11 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -20,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +30,7 @@ import android.widget.Toast;
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.adapters.DeviceListAdapter;
 import com.lasalle.lsmaker_remote.services.BluetoothService;
+import com.lasalle.lsmaker_remote.services.UartService;
 import com.lasalle.lsmaker_remote.utils.Utils;
 
 /**
@@ -45,9 +49,8 @@ public class ConnectionActivity extends AppCompatActivity {
     private BluetoothConnectionTask mAuthTask = null;
 
     // UI references.
-    //private AutoCompleteTextView deviceNameView;
-    //private EditText pincodeView;
-    private View mProgressView;
+    private View scanningProgress;
+    private Button scanButton;
 
     private DeviceListAdapter deviceListAdapter;
 
@@ -64,6 +67,25 @@ public class ConnectionActivity extends AppCompatActivity {
         }
     };
 
+    // Broadcast receiver for the scanning progress
+    private BroadcastReceiver scanningReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+
+            final Intent mIntent = intent;
+            //*********************//
+            if (action.equals(BluetoothService.SCAN_STOPPED)) {
+                showProgress(false);
+            }
+
+        }
+    };
+
+    // IntentFilter to configure the broadcast receiver
+    private IntentFilter intentFilter = new IntentFilter(BluetoothService.SCAN_STOPPED);
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,42 +97,12 @@ public class ConnectionActivity extends AppCompatActivity {
         if (actionBar != null) {
             actionBar.setTitle(R.string.connection_activity_title);
         }
-        
-        // Set up the login form.
-        /*deviceNameView = (AutoCompleteTextView) findViewById(R.id.device_name);
-        deviceNameView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    pincodeView.requestFocus();
-                }
-                return false;
-            }
-        });
 
-        pincodeView = (EditText) findViewById(R.id.pincode);
-        pincodeView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_ACTION_DONE) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
-            }
-        });
+        scanButton = (Button) findViewById(R.id.connection_scan_button);
+        if (scanButton != null) {
+        }
 
-        Button mLogInButton = (Button) findViewById(R.id.login_button);
-        if (mLogInButton != null) {
-            mLogInButton.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    attemptLogin();
-                }
-            });
-        }*/
-
-        mProgressView = findViewById(R.id.login_progress_view);
+        scanningProgress = findViewById(R.id.connection_scanning_progress);
 
     }
 
@@ -123,7 +115,6 @@ public class ConnectionActivity extends AppCompatActivity {
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             Log.d(TAG, "LANDSCAPE");
 
-
             boolean bluetoothCompatibility =
                     BluetoothService.checkDeviceCompatibility(getPackageManager(),
                             (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE));
@@ -134,6 +125,7 @@ public class ConnectionActivity extends AppCompatActivity {
 
             service_init();
             BluetoothService.enableBluetooth(this);
+            showProgress(true);
 
             ListView devicesListView = (ListView) findViewById(R.id.connection_devices_listview);
             if (devicesListView != null) {
@@ -144,12 +136,14 @@ public class ConnectionActivity extends AppCompatActivity {
                 BluetoothService.setDeviceAdapter(deviceListAdapter);
             }
         }
+        registerReceiver(scanningReceiver, intentFilter);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         BluetoothService.pauseBluetooth();
+        unregisterReceiver(scanningReceiver);
     }
 
     @Override
@@ -184,9 +178,7 @@ public class ConnectionActivity extends AppCompatActivity {
     }
 
     /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
+     * Attempts to bind the android device to the bluetooth device.
      */
     private void attemptLogin(BluetoothDevice device) {
         if (mAuthTask != null) {
@@ -197,61 +189,9 @@ public class ConnectionActivity extends AppCompatActivity {
 
         BluetoothService.enableBluetooth(this);
 
-        /*
-        // Reset errors.
-        deviceNameView.setError(null);
-        pincodeView.setError(null);
-
-        // Store values at the time of the login attempt.
-        String deviceName = deviceNameView.getText().toString();
-        String pincode = pincodeView.getText().toString();
-
-        boolean cancel = false;
-        View focusView = null;
-
-        // Check for a valid password, if the user entered one.
-        if (TextUtils.isEmpty(pincode) && !isPasswordValid(pincode)) {
-            pincodeView.setError(getResources().getString(R.string.error_invalid_pincode));
-            focusView = pincodeView;
-            cancel = true;
-        }
-
-        // Check for a valid deviceName address.
-        if (TextUtils.isEmpty(deviceName)) {
-            deviceNameView.setError(getResources().getString(R.string.error_field_required));
-            focusView = deviceNameView;
-            cancel = true;
-        } else if (!isEmailValid(deviceName)) {
-            deviceNameView.setError(getResources().getString(R.string.error_invalid_device_name));
-            focusView = deviceNameView;
-            cancel = true;
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView.requestFocus();
-        } else {*/
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true);
-            mAuthTask = new BluetoothConnectionTask(device, getApplicationContext());
-            mAuthTask.execute((Void) null);
-        //}
+        mAuthTask = new BluetoothConnectionTask(device, getApplicationContext());
+        mAuthTask.execute((Void) null);
     }
-
-
-    /*private boolean isEmailValid(String deviceName) {
-        //TODO: Replace this with your own logic
-        //return deviceName.length() >= 4;
-        return true;
-    }
-
-    private boolean isPasswordValid(String pincode) {
-        //TODO: Replace this with your own logic
-        //return pincode.length() >= 4;
-        return true;
-    }*/
 
     /**
      * Shows the progress UI and hides the login form.
@@ -264,19 +204,21 @@ public class ConnectionActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
             int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
             
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
+            scanningProgress.setVisibility(show ? View.VISIBLE : View.GONE);
+            scanningProgress.animate().setDuration(shortAnimTime).alpha(
                     show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                    scanningProgress.setVisibility(show ? View.VISIBLE : View.GONE);
                 }
             });
         } else {
             // The ViewPropertyAnimator APIs are not available, so simply show
             // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            scanningProgress.setVisibility(show ? View.VISIBLE : View.GONE);
         }
+        scanButton.setVisibility(show ? View.GONE : View.VISIBLE);
+
     }
 
 
@@ -289,10 +231,21 @@ public class ConnectionActivity extends AppCompatActivity {
         BluetoothService.service_init(this);
     }
 
+    private static IntentFilter updateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(BluetoothService.SCAN_STOPPED);
+        return intentFilter;
+    }
 
-    /*
+    public void startScanning(View view) {
+        BluetoothService.startScanningDevices();
+        showProgress(true);
+    }
+
+
+    /* ************************************************************************************
      * Pop up messages
-     */
+     * ************************************************************************************/
 
     /**
      * Shows a pop up informing the user that there's been an error during connection.
@@ -354,49 +307,10 @@ public class ConnectionActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
-    /*public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
-
-        private final String deviceName;
-        private final String pincode;
-        private final Context context;
-
-        UserLoginTask(String email, String password, Context context) {
-            deviceName = email;
-            pincode = password;
-            this.context = context;
-        }
-
-        @Override
-        protected Boolean doInBackground(Void... params) {
-            return BluetoothService.connect(deviceName, pincode, context);
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            showProgress(false);
-
-            if (success) {
-                goToDrivingActivity();
-            } else {
-                showConnectionErrorPopUp(getString(R.string.connection_error_message));
-            }
-        }
-
-        @Override
-        protected void onCancelled() {
-            mAuthTask = null;
-            showProgress(false);
-        }
-    }*/
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
+     * Represents an asynchronous binding task used to connect the user with the bluetooth device.
+     *
      */
     public class BluetoothConnectionTask extends AsyncTask<Void, Void, Boolean> {
 

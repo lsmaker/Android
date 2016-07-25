@@ -89,7 +89,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public void onProgressChanged(VerticalSeekBar seekBar, int progress, boolean fromUser) {
 
                 if (forwardFab.isPressed() || backwardFab.isPressed()) {
-                    DrivingFragmentObserver.setAcceleration(getAcceleration());
+                    DrivingFragmentObserver.setSpeed(getAcceleration());
                 }
             }
 
@@ -114,7 +114,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
                         initialYAngle = getYAngle();
                         break;
                     case MotionEvent.ACTION_UP:
-                        DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
+                        DrivingFragmentObserver.setSpeedAndTurn(0, 0);
                         break;
                 }
                 return false;
@@ -130,7 +130,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
                         initialYAngle = getYAngle();
                         break;
                     case MotionEvent.ACTION_UP:
-                        DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
+                        DrivingFragmentObserver.setSpeedAndTurn(0, 0);
                         break;
                 }
                 return false;
@@ -178,8 +178,8 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             data[Y] = event.values[Y];
             data[Z] = event.values[Z];
 
-            DrivingFragmentObserver.setAcceleration(getAcceleration());
-            DrivingFragmentObserver.setTurning(getTurning());
+            DrivingFragmentObserver.setSpeed(getAcceleration());
+            DrivingFragmentObserver.setTurn(getTurning());
         }
     }
 

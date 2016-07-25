@@ -135,8 +135,8 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
             data[Y] = event.values[Y];
             data[Z] = event.values[Z];
 
-            DrivingFragmentObserver.setAcceleration(getAcceleration());
-            DrivingFragmentObserver.setTurning(getTurning());
+            DrivingFragmentObserver.setSpeed(getAcceleration());
+            DrivingFragmentObserver.setTurn(getTurning());
         }
     }
 
