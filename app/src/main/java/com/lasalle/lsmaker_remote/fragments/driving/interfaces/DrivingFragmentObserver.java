@@ -29,7 +29,6 @@ public class DrivingFragmentObserver {
     }
 
     public static void setSpeed(int speed) {
-        Log.d("ACCELERATION", "Acceleration: "+ speed);
         getInstance().speed = speed;
     }
 

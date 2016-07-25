@@ -16,6 +16,8 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  */
 public class DataSenderService extends IntentService {
 
+    private static final int WAIT_TIME = 500; //0.5 seconds
+
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
@@ -35,20 +37,26 @@ public class DataSenderService extends IntentService {
     @Override
     protected void onHandleIntent(Intent workIntent) {
         DataSenderAdapter dataSenderAdapter = new DataSenderAdapter();
+        boolean moving = false;
 
         while (DrivingFragmentObserver.isRunning()) {
             int speed = DrivingFragmentObserver.getSpeed();
             int turn = DrivingFragmentObserver.getTurn();
             int acceleration = 0;
 
-            Log.d("DATASENDER", speed + " " + turn);
-            if (speed != 0 || turn != 0) {
+            //Log.d("DATASENDER", speed + " " + turn);
+            if (speed != 0 || turn != 0 || moving) {
+                moving = true;
+                Log.d("DATASENDER", speed + " " + turn);
                 BluetoothService.sendMessage(
                         dataSenderAdapter.generateMovementFrame(speed, acceleration, turn));
+                if (speed == 0 && turn == 0) {
+                    moving = false;
+                }
             }
 
             try {
-                Thread.sleep(1000);
+                Thread.sleep(WAIT_TIME);
             } catch (InterruptedException e) {
                 System.err.println(e.getMessage());
             }
