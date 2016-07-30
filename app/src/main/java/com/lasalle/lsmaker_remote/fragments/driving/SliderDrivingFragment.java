@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
@@ -35,6 +36,7 @@ public class SliderDrivingFragment extends DrivingFragment {
     private VerticalSeekBar vSeekBar;
     private Button forwardFab;
     private Button backwardFab;
+    private TextView sliderProgressText;
 
 
     // Accelerometer data.;
@@ -92,7 +94,8 @@ public class SliderDrivingFragment extends DrivingFragment {
         vSeekBar.setOnSeekBarChangeListener(new VerticalSeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(VerticalSeekBar seekBar, int progress, boolean fromUser) {
-
+                String text = vSeekBar.getProgress() + " %";
+                sliderProgressText.setText(text);
                 if (forwardFab.isPressed() || backwardFab.isPressed()) {
                     DrivingFragmentObserver.setSpeed(getSpeed());
                 }
@@ -108,6 +111,10 @@ public class SliderDrivingFragment extends DrivingFragment {
 
             }
         });
+
+        sliderProgressText = (TextView) view.findViewById(R.id.driving_slider_progress_text);
+        String text = vSeekBar.getProgress() + " %";
+        sliderProgressText.setText(text);
 
 
         forwardFab = (Button) view.findViewById(R.id.forward_movement_button);
