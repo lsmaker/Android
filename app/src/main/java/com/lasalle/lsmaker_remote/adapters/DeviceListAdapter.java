@@ -15,7 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 /**
+ * The DeviceListAdapter is an adapter to be used with the bluetooth device's ListView.
  *
+ * The adapter formats the aspect of every cell in the list to show it's name, address and rssi value.
+ *
+ * @author Eduard de Torres
+ * @version 1.0.0
  */
 public class DeviceListAdapter extends BaseAdapter {
     private Context context;

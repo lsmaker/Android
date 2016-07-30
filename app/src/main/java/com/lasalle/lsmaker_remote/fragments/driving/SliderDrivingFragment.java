@@ -1,48 +1,43 @@
 package com.lasalle.lsmaker_remote.fragments.driving;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
+import com.lasalle.lsmaker_remote.services.TiltService;
 import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 
 /**
  * Driving fragment consisting on a seekbar and two buttons.
  * Forward / backward speed controlled by buttons + seekbar.
- * Left / right turning controlled by accelerometer.
+ * Left / right turning controlled by device tilt.
  *
  * @author Eduard de Torres
- * @version 0.1.3
+ * @version 1.0.0
  */
-public class SliderDrivingFragment extends DrivingFragment implements SensorEventListener {
-
-    private static final int X = 0;
-    private static final int Y = 1;
-    private static final int Z = 2;
+public class SliderDrivingFragment extends DrivingFragment {
 
     private VerticalSeekBar vSeekBar;
     private Button forwardFab;
     private Button backwardFab;
-    private SensorManager senSensorManager;
-    private Sensor senAccelerometer;
+    private TextView sliderProgressText;
 
-    // Accelerometer data.
-    private double[] data;
-    private double initialYAngle;
-    private double currentYAngle;
+
+    // Accelerometer data.;
+    private float currentTurnAngle;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -58,17 +53,23 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
 
         configureView(mainView);
 
+        // Accelerometer
+        TiltService.initializeService(getActivity());
+
         return mainView;
     }
 
     public void onPause() {
         super.onPause();
-        senSensorManager.unregisterListener(this);
+        TiltService.stopService();
+        getActivity().unregisterReceiver(tiltReceiver);
     }
+
 
     public void onResume() {
         super.onResume();
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        TiltService.initializeService(getActivity());
+        getActivity().registerReceiver(tiltReceiver, intentFilter);
 
         if (isInverted != PreferencesService.isInvertMode(getContext())) {
             isInverted = PreferencesService.isInvertMode(getContext());
@@ -78,7 +79,9 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
                 setViewLayout(R.layout.fragment_accelerometer_driving_inverted);
             }
         }
+
     }
+
 
     private void configureView(View view) {
         vSeekBar = (VerticalSeekBar) view.findViewById(R.id.SeekBar01);
@@ -87,9 +90,10 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         vSeekBar.setOnSeekBarChangeListener(new VerticalSeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(VerticalSeekBar seekBar, int progress, boolean fromUser) {
-
+                String text = vSeekBar.getProgress() + " %";
+                sliderProgressText.setText(text);
                 if (forwardFab.isPressed() || backwardFab.isPressed()) {
-                    DrivingFragmentObserver.setAcceleration(getAcceleration());
+                    DrivingFragmentObserver.setSpeed(getSpeed());
                 }
             }
 
@@ -104,6 +108,10 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             }
         });
 
+        sliderProgressText = (TextView) view.findViewById(R.id.driving_slider_progress_text);
+        String text = vSeekBar.getProgress() + " %";
+        sliderProgressText.setText(text);
+
 
         forwardFab = (Button) view.findViewById(R.id.forward_movement_button);
         forwardFab.setOnTouchListener(new View.OnTouchListener() {
@@ -111,10 +119,9 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        initialYAngle = getYAngle();
                         break;
                     case MotionEvent.ACTION_UP:
-                        DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
+                        DrivingFragmentObserver.setSpeedAndTurn(0, 0);
                         break;
                 }
                 return false;
@@ -127,74 +134,73 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        initialYAngle = getYAngle();
                         break;
                     case MotionEvent.ACTION_UP:
-                        DrivingFragmentObserver.setAccelerationAndTurning(0, 0);
+                        DrivingFragmentObserver.setSpeedAndTurn(0, 0);
                         break;
                 }
                 return false;
             }
         });
 
-        // Accelerometer
-        data = new double[3];
-        senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
-    @Override
-    public int getAcceleration() {
+    /**
+     * Method that returns the current speed set by the vertical seekbar.
+     *
+     * @return the current speed set by the vertical seekbar
+     */
+    private int getSpeed() {
         if (forwardFab.isPressed()) {
-            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
+            //Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
             return vSeekBar.getProgress();
         }
         if (backwardFab.isPressed()) {
-            Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
+            //Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
             return -vSeekBar.getProgress();
         }
         return 0;
     }
 
-    @Override
-    public int getTurning() {
+    /**
+     * Method that returns the current turn set by the smartphone's orientation.
+     *
+     * The current turn can be calculated using the initial turn (considered 0º or horizontal
+     * position) and the last turn angle gotten from the Tilt service. Maximum turn will be
+     * achieved on a tilt >= 45º.
+     *
+     * @return the current turn set by the smartphone's orientation
+     */
+    private int getTurn() {
         if (forwardFab.isPressed() || backwardFab.isPressed()) {
-            // TODO: Implement truly
-            currentYAngle = getYAngle();
-            Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
-            return (int) (initialYAngle - currentYAngle);
+            float angle = currentTurnAngle;
+            if (angle > 45) angle = 45;
+            if (angle < -45) angle = -45;
+
+            return Math.round(angle * 100 / 45);
         }
         return 0;
     }
 
+    /** Broadcast receiver to listen to the TiltService's changes. */
+    private BroadcastReceiver tiltReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
+            //*********************//
+            if (action.equals(TiltService.TILT_DATA_UPDATED)) {
+                currentTurnAngle = TiltService.getPitch();
 
-        if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            data[X] = event.values[X];
-            data[Y] = event.values[Y];
-            data[Z] = event.values[Z];
+                DrivingFragmentObserver.setTurn(getTurn());
+                //Log.d(TAG, currentSpeedAngle + " : " + currentTurnAngle);
+            }
 
-            DrivingFragmentObserver.setAcceleration(getAcceleration());
-            DrivingFragmentObserver.setTurning(getTurning());
         }
-    }
+    };
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    /** IntentFilter to configure the broadcast receiver */
+    private IntentFilter intentFilter = new IntentFilter(TiltService.TILT_DATA_UPDATED);
 
-    }
-
-    public double getYAngle() {
-        double yAngle;
-
-        double g = Math.sqrt(Math.pow(data[X], 2) + Math.pow(data[Y], 2) + Math.pow(data[Z], 2));
-        yAngle = Math.cos(data[X] / g);
-
-        return yAngle;
-    }
 
 }

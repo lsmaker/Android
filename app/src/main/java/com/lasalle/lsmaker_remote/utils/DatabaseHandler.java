@@ -11,7 +11,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class DatabaseHandler extends  SQLiteOpenHelper {
+/**
+ * Handler class to manage connections with the smartphone's database.
+ *
+ * @author Eduard de Torres
+ * @version 1.0.0
+ */
+public class DatabaseHandler extends SQLiteOpenHelper {
 
     private static final String DB_NAME = "Ls_Remote";
     private static final int DB_VERSION = 1;

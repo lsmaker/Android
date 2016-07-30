@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,17 +9,26 @@
         android:id="@+id/slider_driving_left_layout"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_weight="1.5"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
         <com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar
             android:id="@+id/SeekBar01"
             android:layout_width="25dp"
             android:layout_height="match_parent"
             android:progressDrawable="@drawable/progress_vertical"
-            android:layout_marginLeft="48dp"
             android:layout_marginStart="48dp"
             android:thumb="@drawable/seek_thumb" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:id="@+id/driving_slider_progress_text"
+            android:textColor="@android:color/white"
+            android:textSize="24sp"
+            android:text="100 %"/>
 
     </LinearLayout>
 

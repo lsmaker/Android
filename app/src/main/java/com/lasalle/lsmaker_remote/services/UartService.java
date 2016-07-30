@@ -45,6 +45,8 @@ import java.util.UUID;
 /**
  * Service for managing connection and data communication with a GATT server hosted on a
  * given Bluetooth LE device.
+ *
+ * @author Nordic Semiconductor
  */
 public class UartService extends Service {
     private final static String TAG = UartService.class.getSimpleName();
@@ -297,8 +299,7 @@ public class UartService extends Service {
      *
      * @return 
      */
-    public void enableTXNotification()
-    { 
+    public void enableTXNotification() {
     	/*
     	if (mBluetoothGatt == null) {
     		showMessage("mBluetoothGatt null" + mBluetoothGatt);
@@ -323,14 +324,10 @@ public class UartService extends Service {
         BluetoothGattDescriptor descriptor = TxChar.getDescriptor(CCCD);
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         mBluetoothGatt.writeDescriptor(descriptor);
-    	
     }
     
-    public void writeRXCharacteristic(byte[] value)
-    {
-    
-    	
-    	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
+    public void writeRXCharacteristic(byte[] value) {
+       	BluetoothGattService RxService = mBluetoothGatt.getService(RX_SERVICE_UUID);
     	showMessage("mBluetoothGatt null"+ mBluetoothGatt);
     	if (RxService == null) {
             showMessage("Rx service not found!");

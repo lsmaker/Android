@@ -15,15 +15,17 @@ import android.view.WindowManager;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.AccelerometerDrivingFragment;
-import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.SliderDrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.services.DataSenderService;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Activity that manages the driving view.
- * Contains a fragment to be able to choose between different driving views.
+ *
+ * Contains a fragment to be able to choose between different driving views and is contained inside
+ * a navigational drawer.
  *
  * @author Eduard de Torres
  * @version 0.1.2
@@ -87,7 +89,7 @@ public class DrivingActivity extends AppCompatActivity
     }
 
     /**
-     * Changes the current driving fragment.
+     * Changes the current driving fragment for the one specified as a parameter
      *
      * @param theme DrivingTheme value to choose as driving view
      */
@@ -110,19 +112,23 @@ public class DrivingActivity extends AppCompatActivity
                 .replace(R.id.driving_fragment_container, drivingFragment).commit();
     }
 
+
+    /* Navigation drawer methods */
+
     @Override
     public void onBackPressed() {
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            // The Driving activity is our main activity, so we want to disable it.
+            //super.onBackPressed();
         }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.driving, menu);
+        //getMenuInflater().inflate(R.menu.driving, menu);
         return true;
     }
 
@@ -147,11 +153,16 @@ public class DrivingActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
+
         if (id == R.id.nav_driving) {
-            // Nothing to do.
+            // Driving view selected
+            // Nothing to do as we already are on the driving activity.
         } else if (id == R.id.nav_configuration) {
+            // Configuration or preferences view selected
             Intent i = new Intent(this, PreferencesActivity.class);
             startActivity(i);
+            // After starting the activity, we will "kill" the current activity to prevent the
+            // navigation stack from growing without stop.
             finish();
         }
 
