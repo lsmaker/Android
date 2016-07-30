@@ -75,13 +75,13 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
     public void onPause() {
         super.onPause();
         TiltService.stopService();
-        getActivity().unregisterReceiver(scanningReceiver);
+        getActivity().unregisterReceiver(tiltReceiver);
     }
 
     public void onResume() {
         super.onResume();
         TiltService.initializeService(getActivity());
-        getActivity().registerReceiver(scanningReceiver, intentFilter);
+        getActivity().registerReceiver(tiltReceiver, intentFilter);
 
         if (isInverted != PreferencesService.isInvertMode(getContext())) {
             isInverted = PreferencesService.isInvertMode(getContext());
@@ -118,8 +118,8 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
         return 0;
     }
 
-    // Broadcast receiver for the scanning progress
-    private BroadcastReceiver scanningReceiver = new BroadcastReceiver() {
+    // Broadcast receiver to listen to the TiltService's changes.
+    private BroadcastReceiver tiltReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
