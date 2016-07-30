@@ -13,6 +13,9 @@ import com.lasalle.lsmaker_remote.repositories.impl.PreferencesDB;
  */
 public class PreferencesService {
 
+    /**
+     * List of all possible driving fragments by name
+     */
     public enum DrivingTheme {
         FULL_ACCELEROMETER,
         SEMI_ACCELEROMETER
@@ -38,7 +41,8 @@ public class PreferencesService {
     }
 
 
-    public PreferencesService(Context context) {
+
+    protected PreferencesService(Context context) {
         invertMode = false;
         drivingTheme = DrivingTheme.FULL_ACCELEROMETER;
 
@@ -48,10 +52,22 @@ public class PreferencesService {
         invertMode = preferencesRepo.recoverInvertMode();
     }
 
+    /**
+     * Method that returns the current status of "invert mode" preference.
+     *
+     * @param context a context to be used to enable communication with {@link PreferencesRepo}
+     * @return true if invert mode is enabled. False otherwise.
+     */
     public static boolean isInvertMode(Context context) {
         return getInstance(context).invertMode;
     }
 
+    /**
+     * Method that stores the current preference for invert mode.
+     *
+     * @param invertMode status to be stored. True to enable invert mode, false otherwise.
+     * @param context a context to be used to enable communication with {@link PreferencesRepo}
+     */
     public static void setInvertMode(boolean invertMode, Context context) {
         if (invertMode != isInvertMode(context)) {
             getInstance(context).invertMode = invertMode;
@@ -59,10 +75,22 @@ public class PreferencesService {
         }
     }
 
+    /**
+     * Method that returns the current status of "driving theme" preference.
+     *
+     * @param context a context to be used to enable communication with {@link PreferencesRepo}
+     * @return the current driving theme status
+     */
     public static DrivingTheme getDrivingTheme(Context context) {
         return getInstance(context).drivingTheme;
     }
 
+    /**
+     * Method that stores the current preference for driving theme.
+     *
+     * @param drivingTheme driving theme to be stored.
+     * @param context a context to be used to enable communication with {@link PreferencesRepo}
+     */
     public static void setDrivingTheme(DrivingTheme drivingTheme, Context context) {
         if (drivingTheme != getDrivingTheme(context)) {
             getInstance(context).drivingTheme = drivingTheme;

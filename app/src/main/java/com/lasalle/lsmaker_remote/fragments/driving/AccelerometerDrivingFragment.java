@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,17 +17,19 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
 import com.lasalle.lsmaker_remote.services.PreferencesService;
 import com.lasalle.lsmaker_remote.services.TiltService;
 
+//import android.util.Log;
+
 /**
  * Driving fragment consisting on a button.
- * Forward / backward speed controlled by accelerometer.
- * Left / right turning controlled by accelerometer.
+ * Forward / backward speed controlled by device tilt.
+ * Left / right turning controlled by device tilt.
  *
  * @author Eduard de Torres
  * @version 1.0.0
  */
 public class AccelerometerDrivingFragment extends DrivingFragment {
 
-    private static final String TAG = "ACCELEROMETER_DRIVING_FRAGMENT";
+    //private static final String TAG = "ACCELEROMETER_DRIVING_FRAGMENT";
     private Button runFab;
 
     // Accelerometer data.
@@ -52,7 +53,7 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
         runFab.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                Log.d("FAB", event.toString());
+                //Log.d("FAB", event.toString());
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
                         //Log.d("FAB", "PRESSeD");
@@ -94,6 +95,15 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
 
     }
 
+    /**
+     * Method that returns the current speed set by the smartphone's orientation.
+     *
+     * The current speed can be calculated using the initial speed set when the user first pressed
+     * the run button and the last speed angle gotten from the Tilt service. Maximum speed will be
+     * achieved on a tilt >= 45º.
+     *
+     * @return the current speed set by the smartphone's orientation
+     */
     private int getSpeed() {
         if (runFab.isPressed()) {
             float angle = currentSpeedAngle - initialSpeedAngle;
@@ -106,6 +116,15 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
         return 0;
     }
 
+    /**
+     * Method that returns the current turn set by the smartphone's orientation.
+     *
+     * The current turn can be calculated using the initial turn (considered 0º or horizontal
+     * position) and the last turn angle gotten from the Tilt service. Maximum turn will be
+     * achieved on a tilt >= 45º.
+     *
+     * @return the current turn set by the smartphone's orientation
+     */
     private int getTurn() {
         if (runFab.isPressed()) {
             float angle = currentTurnAngle;
@@ -118,7 +137,7 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
         return 0;
     }
 
-    // Broadcast receiver to listen to the TiltService's changes.
+    /** Broadcast receiver to listen to the TiltService's changes.*/
     private BroadcastReceiver tiltReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -136,7 +155,7 @@ public class AccelerometerDrivingFragment extends DrivingFragment {
         }
     };
 
-    // IntentFilter to configure the broadcast receiver
+    /** IntentFilter to configure the broadcast receiver */
     private IntentFilter intentFilter = new IntentFilter(TiltService.TILT_DATA_UPDATED);
 
 

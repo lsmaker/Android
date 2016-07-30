@@ -16,7 +16,14 @@ import android.hardware.SensorManager;
 public class TiltService implements SensorEventListener {
 
     // Class constants
+    /**
+     * Constant value to covert radians to degrees
+     */
     private static final float RAD_TO_DEG = 57.2957795f;
+    /**
+     * Constant value for the broadcast receivers to identify that a a new value from the sensors
+     * has been obtained.
+     */
     public static final String TILT_DATA_UPDATED = "com.lasalle.lsmaker_remote.TILT_DATA_UPDATED";
     private static final String TAG = "TILT_SERVICE";
 

@@ -15,8 +15,8 @@ import android.view.WindowManager;
 
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.AccelerometerDrivingFragment;
-import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.SliderDrivingFragment;
+import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.services.DataSenderService;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
@@ -111,6 +111,9 @@ public class DrivingActivity extends AppCompatActivity
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.driving_fragment_container, drivingFragment).commit();
     }
+
+
+    /* Navigation drawer methods */
 
     @Override
     public void onBackPressed() {

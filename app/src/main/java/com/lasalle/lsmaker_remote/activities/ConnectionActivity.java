@@ -19,7 +19,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -30,14 +29,13 @@ import android.widget.Toast;
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.adapters.DeviceListAdapter;
 import com.lasalle.lsmaker_remote.services.BluetoothService;
-import com.lasalle.lsmaker_remote.services.UartService;
 import com.lasalle.lsmaker_remote.utils.Utils;
 
 /**
- * A login screen that offers login via device-name/password (or pincode).
+ * A login screen that scans bluetooth devices and offers binding to them.
  *
  * @author Eduard de Torres
- * @version 0.1.1
+ * @version 1.0.0
  */
 public class ConnectionActivity extends AppCompatActivity {
 
@@ -113,7 +111,7 @@ public class ConnectionActivity extends AppCompatActivity {
         // After requesting a change of orientation, the activity will be destroyed and recreated.
         // We only want to start Bluetooth connections during the second "creation".
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Log.d(TAG, "LANDSCAPE");
+            //Log.d(TAG, "LANDSCAPE");
 
             boolean bluetoothCompatibility =
                     BluetoothService.checkDeviceCompatibility(getPackageManager(),
@@ -194,7 +192,7 @@ public class ConnectionActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * Shows the progress UI and hides the scan button.
      */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
     private void showProgress(final boolean show) {

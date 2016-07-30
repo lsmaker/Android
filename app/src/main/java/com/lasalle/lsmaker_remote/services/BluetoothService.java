@@ -19,10 +19,7 @@ import android.widget.BaseAdapter;
 
 import com.lasalle.lsmaker_remote.utils.comparators.BluetoothDeviceComparator;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -31,6 +28,8 @@ import java.util.Map;
 /**
  * Service for communication with LsMaker's Bluetooth.
  *
+ * This service manages the scanning/discovery of bluetooth devices and
+ *
  * @author Eduard de Torres
  * @version 1.0.1
  */
@@ -38,17 +37,16 @@ public class BluetoothService {
     // Constants
     private static final String TAG = "BLUETOOTH_SERVICE";
 
+    /**
+     * Constant value for the broadcast receivers to identify that a scan process has finished.
+     */
     public final static String SCAN_STOPPED = "com.lasalle.lsmaker_remote.ACTION_SCAN_STOPPED";
 
     private static final long SCAN_PERIOD = 5000; //scanning for 5 seconds
-    private static final int REQUEST_SELECT_DEVICE = 1;
     private static final int REQUEST_ENABLE_BT = 2;
 
-    private static final int UART_PROFILE_READY = 10;
     private static final int UART_PROFILE_CONNECTED = 20;
     private static final int UART_PROFILE_DISCONNECTED = 21;
-    private static final int STATE_OFF = 10;
-
 
     // Own attributes
     private static BaseAdapter deviceAdapter;
@@ -70,7 +68,7 @@ public class BluetoothService {
     private static final BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
         @Override
         public void onLeScan(final BluetoothDevice device, final int rssi, byte[] scanRecord) {
-            Log.d(TAG, "Device found: "+ device.getName());
+            //Log.d(TAG, "Device found: "+ device.getName());
             addDevice(device,rssi);
         }
     };
@@ -80,7 +78,7 @@ public class BluetoothService {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            final Intent mIntent = intent;
+            //final Intent mIntent = intent;
             //*********************//
             if (action.equals(UartService.ACTION_GATT_CONNECTED)) {
                 mState = UART_PROFILE_CONNECTED;
@@ -108,7 +106,16 @@ public class BluetoothService {
         }
     };
 
-    public static void initialize(final Context context) {
+    /**
+     * Method that initializes the service.
+     *
+     * This method mus be called first before using any other functionality, otherwise correct
+     * execution can not be assured.
+     *
+     * @param context context that first calls the service. This context must not be destroyed
+     *                while the service is working.
+     */
+    private static void initialize(final Context context) {
         mServiceConnection = new ServiceConnection() {
             public void onServiceConnected(ComponentName className, IBinder rawBinder) {
                 uartService = ((UartService.LocalBinder) rawBinder).getService();
@@ -126,21 +133,14 @@ public class BluetoothService {
         };
     }
 
-    public static boolean connect(String deviceId, String pincode, Context context) {
 
-        // Lookup for a matching device from the scanned device's list
-        for (BluetoothDevice device: deviceList) {
-            // Found a match in the list
-            Log.d(TAG, "Device name: "+ device.getName());
-            Log.d(TAG, "Device address: "+ device.getAddress());
-            if (device.getName()!= null && device.getName().equals(deviceId)) {
-                connect(device, context);
-            }
-        }
-
-        return false;
-    }
-
+    /**
+     * Method that binds the smartphone to a bluetooth device.
+     *
+     * @param device the bluetooth device selected from the scanned list
+     * @param context the activity's context to use to initialize the binding.
+     * @return true if the binding was successfully achieved. False otherwise.
+     */
     public static Boolean connect(BluetoothDevice device, Context context) {
         Log.d(TAG, "CONNECT");
         uartService = new UartService();
@@ -161,14 +161,24 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Method that sends a message to the currently binded bluetooth device.
+     *
+     * @param message the message to be send. Be sure to follow the API message format.
+     * @return true if the message was send successfully. False otherwise.
+     */
     public static boolean sendMessage(byte[] message) {
-        byte[] value;
         //send data to service
         uartService.writeRXCharacteristic(message);
 
         return true;
     }
 
+    /**
+     * Method that disconnects the smartphone from the currently binded bluetooth device.
+     *
+     * @return true if the unbinding was successful. False otherwise.
+     */
     public static boolean disconnect() {
         if (mDevice!=null)
         {
@@ -178,6 +188,14 @@ public class BluetoothService {
     }
 
 
+    /**
+     * Method that checks if the current smartphone is compatible with the Bluetooth Low Energy (BLE)
+     * characteristics.
+     *
+     * @param manager the activity's PackageManager
+     * @param bluetoothManager the activity's BluetoothManager
+     * @return true if the smartphone is compatible. False otherwise.
+     */
     public static boolean checkDeviceCompatibility(PackageManager manager, BluetoothManager bluetoothManager) {
         mHandler = new Handler();
 
@@ -188,6 +206,15 @@ public class BluetoothService {
         return true;
     }
 
+    /**
+     * Method that checks if the bluetooth is enabled.
+     *
+     * If bluetooth isn't enabled, the method will ask the user permission to enable it.
+     * If bluetooth is enabled or permission to enable it is given, then the service starts scanning
+     * for devices.
+     *
+     * @param activityCaller activity that calls the method to let it call Activity's functionalities.
+     */
     public static void enableBluetooth(Activity activityCaller) {
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -198,13 +225,18 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Method that stops a current scanning process.
+     */
     public static void pauseBluetooth() {
         if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
             scanLeDevice(false);
         }
     }
 
-
+    /**
+     * Method that starts scanning for bluetooth devices inside effective radius.
+     */
     public static void startScanningDevices() {
         if (mBluetoothAdapter != null && mBluetoothAdapter.isEnabled()) {
             if (deviceList == null) deviceList = new ArrayList<>();
@@ -213,8 +245,15 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Method that enables or disables device's scanning.
+     *
+     * A scanning process wil have a duration of {@value #SCAN_PERIOD} milliseconds.
+     *
+     * @param enable true to start a scanning process, false to stop it.
+     */
     private static void scanLeDevice(final boolean enable) {
-        Log.d(TAG, "Scan Le Device: "+ enable);
+        //Log.d(TAG, "Scan Le Device: "+ enable);
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
@@ -235,6 +274,12 @@ public class BluetoothService {
 
     }
 
+    /**
+     * Method that adds a device to the current device list.
+     *
+     * @param device discovered device
+     * @param rssi rssi value of discovered device
+     */
     private static void addDevice(BluetoothDevice device, int rssi) {
         boolean deviceFound = false;
 
@@ -256,6 +301,15 @@ public class BluetoothService {
         }
     }
 
+    /**
+     * Method that initializes the service.
+     *
+     * This method mus be called first before using any other functionality, otherwise correct
+     * execution can not be assured.
+     *
+     * @param binderActivity activity that first calls the service. This activity must not be
+     *                       destroye while the service is working.
+     */
     public static void service_init(Activity binderActivity) {
         BluetoothService.binderActivity = binderActivity;
         initialize(binderActivity);
@@ -266,6 +320,9 @@ public class BluetoothService {
         serviceStarted = true;
     }
 
+    /**
+     * Method that stops the service.
+     */
     public static void service_stop() {
         if (serviceStarted) {
             try {
@@ -299,6 +356,11 @@ public class BluetoothService {
      * Getters and setters
      */
 
+    /**
+     * Method that returns the name of the current binded bluetooth device.
+     *
+     * @return the name of the current binded device. May be null if the device doesn't have a name.
+     */
     public static String getBluetoothDeviceName() {
         if (mDevice == null) {
             return null;
@@ -306,6 +368,12 @@ public class BluetoothService {
         return mDevice.getName();
     }
 
+    /**
+     * Method that returns the physical address of the current binded bluetooth device.
+     *
+     * @return the physical address of the current binded device. May not be unique, as the
+     * manufacturer sets its value of factory (2^48 combinations)
+     */
     public static String getBluetoothDeviceAddress() {
         if (mDevice == null) {
             return null;
@@ -313,14 +381,30 @@ public class BluetoothService {
         return mDevice.getAddress();
     }
 
+    /**
+     * Method that returns a list of all current discovered bluetooth devices.
+     * @return a list of all current discovered devices
+     */
     public static List<BluetoothDevice> getDeviceList() {
         return deviceList;
     }
 
+    /**
+     * Method that returns a {@link Map} containing a list of all the current discovered devices'
+     * rssi values. The {@link Map} contains a list of pairs Address / RSSI value.
+     *
+     * @return a list of rssi values from all the discovered devices
+     */
     public static Map<String, Integer> getDevRssiValues() {
         return BluetoothService.devRssiValues;
     }
 
+    /**
+     * Method that configures the adapter that will manage the device's list to let the service
+     * notify any change on its members.
+     *
+     * @param deviceAdapter an adapter to manage the device's list
+     */
     public static void setDeviceAdapter(BaseAdapter deviceAdapter) {
         BluetoothService.deviceAdapter = deviceAdapter;
     }

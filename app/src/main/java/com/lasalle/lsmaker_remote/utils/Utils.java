@@ -5,10 +5,15 @@ import android.content.Context;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
-/**
- * Created by Eduard on 31/05/2016.
- */
 
+/**
+ * Utils class with miscellaneous methods.
+ *
+ * This class aims to contain methods that aren't specific to another class but that are useful.
+ *
+ * @author Eduard de Torres
+ * @version 1.0.0
+ */
 public class Utils {
     public static void hideKeyboard(Activity activity) {
         // Check if no view has focus:

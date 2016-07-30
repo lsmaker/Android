@@ -12,6 +12,7 @@ import com.lasalle.lsmaker_remote.services.PreferencesService;
 
 /**
  * Abstract base fragment to work with DrivingActivity.
+ * Defines what a Driving fragment should be and implements basic common operations.
  *
  * @author Eduard de Torres
  * @version 2.0.0

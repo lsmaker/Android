@@ -12,11 +12,15 @@ import com.lasalle.lsmaker_remote.utils.DatabaseHandler;
 /**
  * Implementation of the PreferencesRepo contract.
  * Stores all information on the device's database.
+ *
+ * @author Eduard de Torres
+ * @version 1.0.0
  */
 public class PreferencesDB implements PreferencesRepo {
 
     private static final  String TABLE_NAME = "preferences";
 
+    // Table's columns
     private static final  String DB_INVERT_MODE     = "invert_mode";
     private static final  String DB_DRIVING_THEME   = "driving_theme";
 

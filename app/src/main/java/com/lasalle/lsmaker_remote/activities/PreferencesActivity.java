@@ -11,7 +11,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,6 +22,8 @@ import android.widget.TextView;
 import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.services.BluetoothService;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
+
+//import android.util.Log;
 
 /**
  * Activity that manages the preferences view.
@@ -99,60 +100,10 @@ public class PreferencesActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            Intent i = new Intent(this, DrivingActivity.class);
-            startActivity(i);
-            finish();
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.driving, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
-        int id = item.getItemId();
-
-
-        if (id == R.id.nav_driving) {
-            Intent i = new Intent(this, DrivingActivity.class);
-            startActivity(i);
-            finish();
-        } else if (id == R.id.nav_configuration) {
-            // Nothing to do.
-        }
-
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
 
     public void onDisconnectButtonClick (View view) {
-        Log.d(this.getClass().getName(), "Disconnected!");
+        //Log.d(this.getClass().getName(), "Disconnected!");
         BluetoothService.disconnect();
         final Intent intent = new Intent(this, ConnectionActivity.class);
         startActivity(intent);
@@ -207,5 +158,60 @@ public class PreferencesActivity extends AppCompatActivity
                     }
                 });
         builderSingle.show();
+    }
+
+
+    /* Navigation drawer methods */
+
+    @Override
+    public void onBackPressed() {
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            Intent i = new Intent(this, DrivingActivity.class);
+            startActivity(i);
+            finish();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        //getMenuInflater().inflate(R.menu.driving, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(MenuItem item) {
+        // Handle navigation view item clicks here.
+        int id = item.getItemId();
+
+
+        if (id == R.id.nav_driving) {
+            Intent i = new Intent(this, DrivingActivity.class);
+            startActivity(i);
+            finish();
+        } else if (id == R.id.nav_configuration) {
+            // Nothing to do.
+        }
+
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
     }
 }

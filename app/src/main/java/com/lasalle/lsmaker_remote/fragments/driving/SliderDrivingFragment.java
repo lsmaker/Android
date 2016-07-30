@@ -22,16 +22,12 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
 /**
  * Driving fragment consisting on a seekbar and two buttons.
  * Forward / backward speed controlled by buttons + seekbar.
- * Left / right turning controlled by accelerometer.
+ * Left / right turning controlled by device tilt.
  *
  * @author Eduard de Torres
  * @version 1.0.0
  */
 public class SliderDrivingFragment extends DrivingFragment {
-
-    private static final int X = 0;
-    private static final int Y = 1;
-    private static final int Z = 2;
 
     private VerticalSeekBar vSeekBar;
     private Button forwardFab;
@@ -149,7 +145,11 @@ public class SliderDrivingFragment extends DrivingFragment {
 
     }
 
-
+    /**
+     * Method that returns the current speed set by the vertical seekbar.
+     *
+     * @return the current speed set by the vertical seekbar
+     */
     private int getSpeed() {
         if (forwardFab.isPressed()) {
             //Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
@@ -162,6 +162,15 @@ public class SliderDrivingFragment extends DrivingFragment {
         return 0;
     }
 
+    /**
+     * Method that returns the current turn set by the smartphone's orientation.
+     *
+     * The current turn can be calculated using the initial turn (considered 0º or horizontal
+     * position) and the last turn angle gotten from the Tilt service. Maximum turn will be
+     * achieved on a tilt >= 45º.
+     *
+     * @return the current turn set by the smartphone's orientation
+     */
     private int getTurn() {
         if (forwardFab.isPressed() || backwardFab.isPressed()) {
             float angle = currentTurnAngle;
@@ -173,7 +182,7 @@ public class SliderDrivingFragment extends DrivingFragment {
         return 0;
     }
 
-    // Broadcast receiver to listen to the TiltService's changes.
+    /** Broadcast receiver to listen to the TiltService's changes. */
     private BroadcastReceiver tiltReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -190,7 +199,7 @@ public class SliderDrivingFragment extends DrivingFragment {
         }
     };
 
-    // IntentFilter to configure the broadcast receiver
+    /** IntentFilter to configure the broadcast receiver */
     private IntentFilter intentFilter = new IntentFilter(TiltService.TILT_DATA_UPDATED);
 
 

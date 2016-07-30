@@ -4,6 +4,7 @@ package com.lasalle.lsmaker_remote.fragments.driving.interfaces;
 /**
  * Observer for DrivingFragment class.
  * Provides updated information on speed and turn values to be checked by DataSenderService.
+ * It's information must be updated manually by the driving fragments by calling to it's setters.
  *
  * @author Eduard de Torres
  * @version 1.1.1
