@@ -14,7 +14,7 @@ import com.lasalle.lsmaker_remote.services.PreferencesService;
  * Abstract base fragment to work with DrivingActivity.
  *
  * @author Eduard de Torres
- * @version 1.1.0
+ * @version 2.0.0
  */
 public abstract class DrivingFragment extends Fragment {
 
@@ -28,33 +28,6 @@ public abstract class DrivingFragment extends Fragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    /**
-     * Returns the forward/backward speed represented by the fragment.
-     * <p>
-     *     All speed is bound between [-100, 100] values.
-     *
-     *     >0 => Forward
-     *      0 => Not moving forward/backward
-     *     <0 => Backward
-     * </p>
-     *
-     * @return speed value of vertical movement
-     */
-    public abstract int getAcceleration();
-
-    /**
-     * Returns the turning right/left speed represented by the fragment.
-     * <p>
-     *     All speed is bound between [-100, 100] values.
-     *
-     *     >0 => Turning right
-     *      0 => Not turning
-     *     <0 => Turning left
-     * </p>
-     *
-     * @return speed value of turning movement
-     */
-    public abstract int getTurning();
 
     protected void setViewLayout(int id) {
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);

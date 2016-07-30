@@ -1,8 +1,6 @@
 package com.lasalle.lsmaker_remote.fragments.driving.interfaces;
 
 
-import android.util.Log;
-
 /**
  * Observer for DrivingFragment class.
  * Provides updated information on speed and turn values to be checked by DataSenderService.

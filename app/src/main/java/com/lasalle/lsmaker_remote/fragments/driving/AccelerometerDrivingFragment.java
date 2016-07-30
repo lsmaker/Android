@@ -1,10 +1,9 @@
 package com.lasalle.lsmaker_remote.fragments.driving;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +16,7 @@ import com.lasalle.lsmaker_remote.R;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragment;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
 import com.lasalle.lsmaker_remote.services.PreferencesService;
+import com.lasalle.lsmaker_remote.services.TiltService;
 
 /**
  * Driving fragment consisting on a button.
@@ -24,24 +24,17 @@ import com.lasalle.lsmaker_remote.services.PreferencesService;
  * Left / right turning controlled by accelerometer.
  *
  * @author Eduard de Torres
- * @version 0.1.4
+ * @version 1.0.0
  */
-public class AccelerometerDrivingFragment extends DrivingFragment implements SensorEventListener {
+public class AccelerometerDrivingFragment extends DrivingFragment {
 
-    private static final int X = 0;
-    private static final int Y = 1;
-    private static final int Z = 2;
-
+    private static final String TAG = "ACCELEROMETER_DRIVING_FRAGMENT";
     private Button runFab;
-    private SensorManager senSensorManager;
-    private Sensor senAccelerometer;
 
     // Accelerometer data.
-    private double[] data;
-    private double initialXAngle;
-    private double currentXAngle;
-    private double initialYAngle;
-    private double currentYAngle;
+    private float initialSpeedAngle;
+    private float currentSpeedAngle;
+    private float currentTurnAngle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -62,12 +55,11 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
                 Log.d("FAB", event.toString());
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        Log.d("FAB", "PRESSeD");
-                        initialXAngle = getXAngle();
-                        initialYAngle = getYAngle();
+                        //Log.d("FAB", "PRESSeD");
+                        initialSpeedAngle = TiltService.getRoll();
                         break;
                     case MotionEvent.ACTION_UP:
-                        Log.d("FAB", "RELEASED");
+                        //Log.d("FAB", "RELEASED");
                         break;
                 }
                 return false;
@@ -75,22 +67,21 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
         });
 
         // Accelerometer
-        data = new double[3];
-        senSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
-        senAccelerometer = senSensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        TiltService.initializeService(getActivity());
 
         return mainView;
     }
 
     public void onPause() {
         super.onPause();
-        senSensorManager.unregisterListener(this);
+        TiltService.stopService();
+        getActivity().unregisterReceiver(scanningReceiver);
     }
 
     public void onResume() {
         super.onResume();
-        senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
+        TiltService.initializeService(getActivity());
+        getActivity().registerReceiver(scanningReceiver, intentFilter);
 
         if (isInverted != PreferencesService.isInvertMode(getContext())) {
             isInverted = PreferencesService.isInvertMode(getContext());
@@ -103,65 +94,50 @@ public class AccelerometerDrivingFragment extends DrivingFragment implements Sen
 
     }
 
-    @Override
-    public int getAcceleration() {
+    private int getSpeed() {
         if (runFab.isPressed()) {
-            // TODO: Implement truly
-            currentXAngle = getXAngle();
-            Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
-            return (int)(currentXAngle * 100);
+            float angle = currentSpeedAngle - initialSpeedAngle;
+            if (angle > 45) angle = 45;
+            if (angle < -45) angle = -45;
+
+            return Math.round(angle * 100 / 45);
         }
 
         return 0;
     }
 
-    @Override
-    public int getTurning() {
+    private int getTurn() {
         if (runFab.isPressed()) {
-            // TODO: Implement truly
-            currentYAngle = getYAngle();
-            //Log.d("DRIVING", "X= " + data[X] + " Y= " + data[Y] + " Z= " + data[Z]);
-            return (int) (initialYAngle - currentYAngle);
+            float angle = currentTurnAngle;
+            if (angle > 45) angle = 45;
+            if (angle < -45) angle = -45;
+
+            return Math.round(angle * 100 / 45);
+
         }
         return 0;
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Sensor mySensor = event.sensor;
+    // Broadcast receiver for the scanning progress
+    private BroadcastReceiver scanningReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
 
-        if (mySensor.getType() == Sensor.TYPE_ROTATION_VECTOR) {
-            data[X] = event.values[X];
-            data[Y] = event.values[Y];
-            data[Z] = event.values[Z];
+            //*********************//
+            if (action.equals(TiltService.TILT_DATA_UPDATED)) {
+                currentSpeedAngle = TiltService.getRoll();
+                currentTurnAngle = TiltService.getPitch();
 
-            DrivingFragmentObserver.setSpeed(getAcceleration());
-            DrivingFragmentObserver.setTurn(getTurning());
+                DrivingFragmentObserver.setSpeedAndTurn(getSpeed(), getTurn());
+                //Log.d(TAG, currentSpeedAngle + " : " + currentTurnAngle);
+            }
+
         }
-    }
+    };
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    // IntentFilter to configure the broadcast receiver
+    private IntentFilter intentFilter = new IntentFilter(TiltService.TILT_DATA_UPDATED);
 
-    }
 
-    private double getXAngle() {
-        double xAngle;
-
-        double g = Math.sqrt(Math.pow(data[X], 2) + Math.pow(data[Y], 2) + Math.pow(data[Z], 2));
-        xAngle = Math.cos(data[Y] / g);
-
-        //xAngle = (xAngle - 0.5) / 0.5 * 100 * (data[Z] / Math.abs(data[Z])) ;
-
-        return xAngle;
-    }
-
-    public double getYAngle() {
-        double yAngle;
-
-        double g = Math.sqrt(Math.pow(data[X], 2) + Math.pow(data[Y], 2) + Math.pow(data[Z], 2));
-        yAngle = Math.cos(data[X] / g);
-
-        return yAngle;
-    }
 }

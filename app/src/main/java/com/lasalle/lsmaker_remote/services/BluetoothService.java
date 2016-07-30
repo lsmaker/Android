@@ -17,7 +17,13 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
+import com.lasalle.lsmaker_remote.utils.comparators.BluetoothDeviceComparator;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -242,6 +248,7 @@ public class BluetoothService {
         devRssiValues.put(device.getAddress(), rssi);
         if (!deviceFound) {
             deviceList.add(device);
+            Collections.sort(deviceList, new BluetoothDeviceComparator());
             devRssiValues.put(device.getAddress(), rssi);
             if (deviceAdapter != null) {
                 deviceAdapter.notifyDataSetChanged();

@@ -144,7 +144,7 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         senSensorManager.registerListener(this, senAccelerometer, SensorManager.SENSOR_DELAY_GAME);
     }
 
-    @Override
+
     public int getAcceleration() {
         if (forwardFab.isPressed()) {
             Log.d("DRIVING", "Speed = " + vSeekBar.getProgress());
@@ -157,7 +157,6 @@ public class SliderDrivingFragment extends DrivingFragment implements SensorEven
         return 0;
     }
 
-    @Override
     public int getTurning() {
         if (forwardFab.isPressed() || backwardFab.isPressed()) {
             // TODO: Implement truly
