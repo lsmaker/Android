@@ -11,6 +11,7 @@ import java.nio.ByteBuffer;
  * @version 1.0.0
  */
 public class DataSenderAdapter {
+    private static final String TAG = "DataSenderAdapter";
 
     // Bit masks
     private static final byte TCP_PROTOCOL_MASK = 0b1000000;
@@ -61,6 +62,7 @@ public class DataSenderAdapter {
         buffer.put((byte) turn);
 
         byte[] frame = buffer.array();
+
         return frame;
     }
 
@@ -357,4 +359,5 @@ public class DataSenderAdapter {
 
         return header;
     }
+
 }

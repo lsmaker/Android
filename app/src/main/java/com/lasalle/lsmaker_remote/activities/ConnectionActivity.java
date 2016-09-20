@@ -1,5 +1,6 @@
 package com.lasalle.lsmaker_remote.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -12,10 +13,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,11 +39,12 @@ import com.lasalle.lsmaker_remote.utils.Utils;
  * A login screen that scans bluetooth devices and offers binding to them.
  *
  * @author Eduard de Torres
- * @version 1.0.0
+ * @version 1.0.1
  */
 public class ConnectionActivity extends AppCompatActivity {
 
     private static final String TAG = ConnectionActivity.class.getName();
+
 
     /**
      * Keeps track of the login task to ensure we can cancel it if requested.
@@ -54,6 +59,7 @@ public class ConnectionActivity extends AppCompatActivity {
 
     // Bluetooth
     private static final int REQUEST_ENABLE_BT = 1;
+    private static final int REQUEST_FINE_LOCATION = 2; // Needed on API >= 23
 
     // ListView listener
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
@@ -84,6 +90,20 @@ public class ConnectionActivity extends AppCompatActivity {
     private IntentFilter intentFilter = new IntentFilter(BluetoothService.SCAN_STOPPED);
 
 
+    /**
+     * Asks the system and / or the user for a given permission.
+     *
+     * @param perm permission name to request
+     * @param requestCode internal code to identify the permission request result on an onActivityResult.
+     */
+    private void loadPermissions(String perm, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
+            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
+                ActivityCompat.requestPermissions(this, new String[]{perm},requestCode);
+            }
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,14 +111,18 @@ public class ConnectionActivity extends AppCompatActivity {
         // Screen orientation's configuration.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
+        loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION,REQUEST_FINE_LOCATION);
+
+        //BluetoothService.askForBluetoothPermissions(this, PERMISSIONS_REQUEST_BT);
+
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(R.string.connection_activity_title);
         }
 
         scanButton = (Button) findViewById(R.id.connection_scan_button);
-        if (scanButton != null) {
-        }
+        //if (scanButton != null) {
+        //}
 
         scanningProgress = findViewById(R.id.connection_scanning_progress);
 
@@ -168,6 +192,15 @@ public class ConnectionActivity extends AppCompatActivity {
                     Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
                     // Show an error pop up and finish the application.
                     showBluetoothNotEnabledPopUp();
+                }
+                break;
+            case REQUEST_FINE_LOCATION:
+                if (resultCode == Activity.RESULT_OK) {
+                    // User did grant Bluetooth permissions
+                    Toast.makeText(this, "Coarse location permission granted", Toast.LENGTH_SHORT).show();
+                } else {
+                    // User did not grant Bluetooth permissions
+                    Toast.makeText(this, "Coarse location permission denied", Toast.LENGTH_SHORT).show();
                 }
                 break;
             default:
@@ -343,5 +376,6 @@ public class ConnectionActivity extends AppCompatActivity {
             showProgress(false);
         }
     }
+
 }
 
