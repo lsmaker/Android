@@ -119,6 +119,7 @@ public class SliderDrivingFragment extends DrivingFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        DrivingFragmentObserver.setSpeed(getSpeed());
                         break;
                     case MotionEvent.ACTION_UP:
                         DrivingFragmentObserver.setSpeedAndTurn(0, 0);
@@ -134,6 +135,7 @@ public class SliderDrivingFragment extends DrivingFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
+                        DrivingFragmentObserver.setSpeed(getSpeed());
                         break;
                     case MotionEvent.ACTION_UP:
                         DrivingFragmentObserver.setSpeedAndTurn(0, 0);

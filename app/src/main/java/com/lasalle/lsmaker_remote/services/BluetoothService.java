@@ -17,6 +17,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.BaseAdapter;
 
+import com.lasalle.lsmaker_remote.utils.Utils;
 import com.lasalle.lsmaker_remote.utils.comparators.BluetoothDeviceComparator;
 
 import java.util.ArrayList;
@@ -169,6 +170,7 @@ public class BluetoothService {
      */
     public static boolean sendMessage(byte[] message) {
         //send data to service
+        Log.d(TAG, Utils.bytesToHex(message));
         uartService.writeRXCharacteristic(message);
 
         return true;

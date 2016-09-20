@@ -17,7 +17,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  */
 public class DataSenderService extends IntentService {
 
-    private static final int WAIT_TIME = 300; //0.3 seconds
+    private static final int WAIT_TIME = 100; //0.1 seconds
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
