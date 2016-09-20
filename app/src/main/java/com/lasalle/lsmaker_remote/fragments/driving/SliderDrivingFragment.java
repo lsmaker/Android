@@ -25,7 +25,7 @@ import com.lasalle.lsmaker_remote.utils.vertical_seekbar.VerticalSeekBar;
  * Left / right turning controlled by device tilt.
  *
  * @author Eduard de Torres
- * @version 1.0.0
+ * @version 1.0.2
  */
 public class SliderDrivingFragment extends DrivingFragment {
 
@@ -33,7 +33,6 @@ public class SliderDrivingFragment extends DrivingFragment {
     private Button forwardFab;
     private Button backwardFab;
     private TextView sliderProgressText;
-
 
     // Accelerometer data.;
     private float currentTurnAngle;
@@ -92,9 +91,9 @@ public class SliderDrivingFragment extends DrivingFragment {
             public void onProgressChanged(VerticalSeekBar seekBar, int progress, boolean fromUser) {
                 String text = vSeekBar.getProgress() + " %";
                 sliderProgressText.setText(text);
-                if (forwardFab.isPressed() || backwardFab.isPressed()) {
+                //if (forwardFab.isPressed() || backwardFab.isPressed()) {
                     DrivingFragmentObserver.setSpeed(getSpeed());
-                }
+                //}
             }
 
             @Override
@@ -119,7 +118,6 @@ public class SliderDrivingFragment extends DrivingFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        DrivingFragmentObserver.setSpeed(getSpeed());
                         break;
                     case MotionEvent.ACTION_UP:
                         DrivingFragmentObserver.setSpeedAndTurn(0, 0);
@@ -135,7 +133,6 @@ public class SliderDrivingFragment extends DrivingFragment {
             public boolean onTouch(View v, MotionEvent event) {
                 switch (event.getAction()) {
                     case MotionEvent.ACTION_DOWN:
-                        DrivingFragmentObserver.setSpeed(getSpeed());
                         break;
                     case MotionEvent.ACTION_UP:
                         DrivingFragmentObserver.setSpeedAndTurn(0, 0);
@@ -194,7 +191,7 @@ public class SliderDrivingFragment extends DrivingFragment {
             if (action.equals(TiltService.TILT_DATA_UPDATED)) {
                 currentTurnAngle = TiltService.getPitch();
 
-                DrivingFragmentObserver.setTurn(getTurn());
+                DrivingFragmentObserver.setSpeedAndTurn(getSpeed(), getTurn());
                 //Log.d(TAG, currentSpeedAngle + " : " + currentTurnAngle);
             }
 

@@ -20,10 +20,11 @@
 
         <service
             android:name=".services.DataSenderService"
-            android:exported="false"/>
+            android:exported="false" />
 
         <activity
-            android:name=".activities.ConnectionActivity">
+            android:name=".activities.ConnectionActivity"
+            android:screenOrientation="landscape" >
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +38,7 @@
         <activity
             android:name=".activities.DrivingActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape" />
 
         <activity
             android:name=".activities.PreferencesActivity"
