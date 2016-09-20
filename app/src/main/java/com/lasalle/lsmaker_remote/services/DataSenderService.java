@@ -2,6 +2,7 @@ package com.lasalle.lsmaker_remote.services;
 
 import android.app.IntentService;
 import android.content.Intent;
+import android.util.Log;
 
 import com.lasalle.lsmaker_remote.adapters.DataSenderAdapter;
 import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentObserver;
@@ -17,6 +18,7 @@ import com.lasalle.lsmaker_remote.fragments.driving.interfaces.DrivingFragmentOb
  */
 public class DataSenderService extends IntentService {
 
+    private static final String TAG = DataSenderService.class.getName();
     private static final int WAIT_TIME = 100; //0.1 seconds
 
     /**
@@ -48,7 +50,7 @@ public class DataSenderService extends IntentService {
             //Log.d("DATASENDER", speed + " " + turn);
             if (speed != 0 || turn != 0 || moving) {
                 moving = true;
-                //Log.d("DATASENDER", speed + " " + turn);
+                //Log.d(TAG, speed + " " + turn);
                 BluetoothService.sendMessage(
                         dataSenderAdapter.generateMovementFrame(speed, acceleration, turn));
                 if (speed == 0 && turn == 0) {
