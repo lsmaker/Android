@@ -39,12 +39,11 @@ import com.lasalle.lsmaker_remote.utils.Utils;
  * A login screen that scans bluetooth devices and offers binding to them.
  *
  * @author Eduard de Torres
- * @version 1.0.1
+ * @version 1.0.3
  */
 public class ConnectionActivity extends AppCompatActivity {
 
     private static final String TAG = ConnectionActivity.class.getName();
-
 
     /**
      * Keeps track of the login task to ensure we can cancel it if requested.
@@ -60,6 +59,7 @@ public class ConnectionActivity extends AppCompatActivity {
     // Bluetooth
     private static final int REQUEST_ENABLE_BT = 1;
     private static final int REQUEST_FINE_LOCATION = 2; // Needed on API >= 23
+    private boolean askForEnableBLE = true;
 
     // ListView listener
     private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
@@ -98,9 +98,9 @@ public class ConnectionActivity extends AppCompatActivity {
      */
     private void loadPermissions(String perm, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, perm) != PackageManager.PERMISSION_GRANTED) {
-            if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
+            //if (!ActivityCompat.shouldShowRequestPermissionRationale(this, perm)) {
                 ActivityCompat.requestPermissions(this, new String[]{perm},requestCode);
-            }
+            //}
         }
     }
 
@@ -111,9 +111,7 @@ public class ConnectionActivity extends AppCompatActivity {
         // Screen orientation's configuration.
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
-        loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION,REQUEST_FINE_LOCATION);
-
-        //BluetoothService.askForBluetoothPermissions(this, PERMISSIONS_REQUEST_BT);
+        loadPermissions(Manifest.permission.ACCESS_FINE_LOCATION, REQUEST_FINE_LOCATION);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -121,11 +119,7 @@ public class ConnectionActivity extends AppCompatActivity {
         }
 
         scanButton = (Button) findViewById(R.id.connection_scan_button);
-        //if (scanButton != null) {
-        //}
-
         scanningProgress = findViewById(R.id.connection_scanning_progress);
-
     }
 
     @Override
@@ -144,18 +138,19 @@ public class ConnectionActivity extends AppCompatActivity {
                 showBluetoothNoCompatiblePopUp();
             }
 
-
             service_init();
-            BluetoothService.enableBluetooth(this);
-            showProgress(true);
+            if (askForEnableBLE) {
+                BluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
+                showProgress(true);
 
-            ListView devicesListView = (ListView) findViewById(R.id.connection_devices_listview);
-            if (devicesListView != null) {
-                deviceListAdapter = new DeviceListAdapter(this,
-                        BluetoothService.getDeviceList(), BluetoothService.getDevRssiValues());
-                devicesListView.setAdapter(deviceListAdapter);
-                devicesListView.setOnItemClickListener(mDeviceClickListener);
-                BluetoothService.setDeviceAdapter(deviceListAdapter);
+                ListView devicesListView = (ListView) findViewById(R.id.connection_devices_listview);
+                if (devicesListView != null) {
+                    deviceListAdapter = new DeviceListAdapter(this,
+                            BluetoothService.getDeviceList(), BluetoothService.getDevRssiValues());
+                    devicesListView.setAdapter(deviceListAdapter);
+                    devicesListView.setOnItemClickListener(mDeviceClickListener);
+                    BluetoothService.setDeviceAdapter(deviceListAdapter);
+                }
             }
         }
         registerReceiver(scanningReceiver, intentFilter);
@@ -181,26 +176,25 @@ public class ConnectionActivity extends AppCompatActivity {
 
             // When the request to enable Bluetooth returns
             case REQUEST_ENABLE_BT:
-
                 if (resultCode == Activity.RESULT_OK) {
-                    Toast.makeText(this, "Bluetooth has turned on ", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.bluetooth_enabled_toast, Toast.LENGTH_SHORT).show();
                     // Starts scanning for devices.
                     BluetoothService.startScanningDevices();
 
                 } else {
                     // User did not enable Bluetooth or an error occurred
-                    Toast.makeText(this, "Problem in BT Turning ON ", Toast.LENGTH_SHORT).show();
+                    askForEnableBLE = false;
+                    Toast.makeText(this, R.string.bluetooth_not_enabled_toast, Toast.LENGTH_SHORT).show();
                     // Show an error pop up and finish the application.
-                    showBluetoothNotEnabledPopUp();
+                    showBluetoothPermissionNotGrantedPopUp(this);
                 }
                 break;
             case REQUEST_FINE_LOCATION:
                 if (resultCode == Activity.RESULT_OK) {
                     // User did grant Bluetooth permissions
-                    Toast.makeText(this, "Coarse location permission granted", Toast.LENGTH_SHORT).show();
                 } else {
                     // User did not grant Bluetooth permissions
-                    Toast.makeText(this, "Coarse location permission denied", Toast.LENGTH_SHORT).show();
+                    showLocationPermissionNotGrantedPopUp();
                 }
                 break;
             default:
@@ -218,7 +212,7 @@ public class ConnectionActivity extends AppCompatActivity {
 
         Utils.hideKeyboard(this);
 
-        BluetoothService.enableBluetooth(this);
+        BluetoothService.enableBluetooth(this, REQUEST_ENABLE_BT);
 
         mAuthTask = new BluetoothConnectionTask(device, getApplicationContext());
         mAuthTask.execute((Void) null);
@@ -313,13 +307,36 @@ public class ConnectionActivity extends AppCompatActivity {
     }
 
     /**
-     * Shows a pop up informing the user that Bluetooth isn't enabled and the app will close.
+     * Shows a pop up informing the user that Location permissions aren't granted and the app will close.
      */
-    private void showBluetoothNotEnabledPopUp() {
+    private void showLocationPermissionNotGrantedPopUp() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
-        builder.setTitle(getString(R.string.bluetooth_not_enabled_title));
-        builder.setMessage(R.string.bluetooth_not_enabled_message);
+        builder.setTitle(getString(R.string.location_not_granted_title));
+        builder.setMessage(R.string.location_not_granted_message);
         builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+
+        builder.show();
+    }
+
+    /**
+     * Shows a pop up informing the user that Bluetooth isn't enabled.
+     * @param connectionActivity
+     */
+    private void showBluetoothPermissionNotGrantedPopUp(final ConnectionActivity connectionActivity) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.AppCompatAlertDialogStyle);
+        builder.setTitle(getString(R.string.bluetooth_not_granted_title));
+        builder.setMessage(R.string.bluetooth_not_granted_message);
+        builder.setPositiveButton(getString(R.string.pop_up_accept), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                askForEnableBLE = true;
+                BluetoothService.enableBluetooth(connectionActivity, REQUEST_ENABLE_BT);
+            }
+        });
+        builder.setNegativeButton(getString(R.string.pop_up_close), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 finish();
             }

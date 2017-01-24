@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">LsMaker Remoto</string>
+
+    <!-- Strings related to login -->
+    <string name="connection_activity_title">Conexión</string>
+
+    <string name="hint_device_name">Nombre del dispositivo</string>
+    <string name="hint_pin">Pin</string>
+    <string name="action_sign_in">Conecta con el dispositivo</string>
+    <string name="action_sign_in_short">Conecta</string>
+    <string name="error_invalid_device_name">El nombre del dispositivo es demasiado corto</string>
+    <string name="error_invalid_pincode">El pin es demasiado corto</string>
+    <string name="error_field_required">El campo no puede estar vacío</string>
+    <string name="error_incorrect_credentials">No se ha podido realizar la conexión, alguno de los campos es incorrecto</string>
+    <string name="connecting_message">Conectando, espere un momento...</string>
+    <string name="connection_error_title">Error de conexión</string>
+    <string name="pop_up_accept">ACEPTAR</string>
+    <string name="pop_up_close">CERRAR</string>
+    <string name="connection_error_message">No se ha podido conectar con el dispositivo</string>
+
+    <!-- Strings related to driving -->
+    <string name="driving_activity_title">Modo conducción</string>
+
+    <string name="navigation_drawer_open">Abre el menú de navegación</string>
+    <string name="navigation_drawer_close">Cierra el menú de navegación</string>
+
+    <string name="action_settings">Configuración</string>
+    <string name="menu_driving_mode">Modo conducción</string>
+    <string name="configuration_menu_title">Configuración</string>
+    <string name="configuration_label">Configuración</string>
+    <string name="connection_activity_label">Conexión</string>
+
+
+
+    <!-- Strings related to preferences -->
+    <string name="preferences_activity_title">Configuración</string>
+
+    <string name="preferences_connection_title">conexión</string>
+    <string name="preferences_connection_button_text">Desconectar</string>
+
+    <string name="preferences_invert_title">Invertir controles</string>
+    <string name="preferences_invert_description">Invierte de posición los controles de conducción</string>
+
+    <string name="preferences_theme_title">Tema de conducción</string>
+    <string name="preferences_theme_picker_title">Elija modo de conducción</string>
+
+    <string name="preferences_device_name_title">Nombre del dispositivo:</string>
+    <string name="preferences_device_address_title">Dirección del dispositivo:</string>
+
+    <!-- Strings related to Bluetooth connection -->
+    <string name="bluetooth_not_compatible_title">No compatible con BLE</string>
+    <string name="bluetooth_not_compatible_message">Lo sentimos, pero este dispositivo no es compatible con Bluetooth Low Energy</string>
+    <string name="location_not_granted_title">Permisos de localización</string>
+    <string name="location_not_granted_message">Para poder descubrir nuevos dispositivos LsMaker, es necesario disponer de los permisos de localización.</string>
+    <string name="bluetooth_not_granted_title">Permisos de activación de Bluetooth</string>
+    <string name="bluetooth_not_granted_message">Para poder descubrir nuevos dispositivos LsMaker, es necesario activar el Bluetooth.</string>
+    <string name="connection_devices_list_title">dispositivos al alcance</string>
+    <string name="connection_devices_list_tip">Elige el dispositivo al que te quieres conectar</string>
+    <string name="connection_device_not_found_text">No se han encontrado dispositivos al alcance</string>
+    <string name="connection_scan_button_text">Escanear</string>
+    <string name="bluetooth_not_enabled_toast">Sin Bluetooth, la aplicación no puede funcionar</string>
+    <string name="bluetooth_enabled_toast">se ha encendido el Bluetooth</string>
+
+
+</resources>

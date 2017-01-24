@@ -32,7 +32,7 @@ import java.util.Map;
  * This service manages the scanning/discovery of bluetooth devices and
  *
  * @author Eduard de Torres
- * @version 1.0.1
+ * @version 1.0.2
  */
 public class BluetoothService {
     // Constants
@@ -44,7 +44,6 @@ public class BluetoothService {
     public final static String SCAN_STOPPED = "com.lasalle.lsmaker_remote.ACTION_SCAN_STOPPED";
 
     private static final long SCAN_PERIOD = 5000; //scanning for 5 seconds
-    private static final int REQUEST_ENABLE_BT = 2;
 
     private static final int UART_PROFILE_CONNECTED = 20;
     private static final int UART_PROFILE_DISCONNECTED = 21;
@@ -124,7 +123,6 @@ public class BluetoothService {
                 if (!uartService.initialize(context)) {
                     Log.e(TAG, "Unable to initialize Bluetooth");
                 }
-
             }
 
             public void onServiceDisconnected(ComponentName classname) {
@@ -217,10 +215,10 @@ public class BluetoothService {
      *
      * @param activityCaller activity that calls the method to let it call Activity's functionalities.
      */
-    public static void enableBluetooth(Activity activityCaller) {
+    public static void enableBluetooth(Activity activityCaller, int resultCode) {
         if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            activityCaller.startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+            activityCaller.startActivityForResult(enableBtIntent, resultCode);
         } else {
             // Starts scanning for devices.
             startScanningDevices();

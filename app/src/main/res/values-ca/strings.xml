@@ -1,0 +1,64 @@
+<resources>
+    <string name="app_name">LsMaker Remot</string>
+
+    <!-- Strings related to login -->
+    <string name="connection_activity_title">Connexió</string>
+
+    <string name="hint_device_name">Nom del dispositiu</string>
+    <string name="hint_pin">Pin</string>
+    <string name="action_sign_in">Connecta amb el dispositiu</string>
+    <string name="action_sign_in_short">Connecta</string>
+    <string name="error_invalid_device_name">El nom del dispositiu \és massa curt</string>
+    <string name="error_invalid_pincode">El pin és massa curt</string>
+    <string name="error_field_required">El camp no pot estar buit</string>
+    <string name="error_incorrect_credentials">No s\'ha pogut realitzar la connexió, algun dels camps és incorrecte</string>
+    <string name="connecting_message">Connectant, esperi un moment...</string>
+    <string name="connection_error_title">Error de connexió</string>
+    <string name="pop_up_accept">ACCEPTAR</string>
+    <string name="pop_up_close">TANCAR</string>
+    <string name="connection_error_message">No s\'ha pogut connectar amb el dispositiu</string>
+
+    <!-- Strings related to driving -->
+    <string name="driving_activity_title">Mode conducció</string>
+
+    <string name="navigation_drawer_open">Obre el menú de navegació</string>
+    <string name="navigation_drawer_close">Tanca el menú de navegació</string>
+
+    <string name="action_settings">Configuració</string>
+    <string name="menu_driving_mode">Mode conducció</string>
+    <string name="configuration_menu_title">Configuració</string>
+    <string name="configuration_label">Configuració</string>
+    <string name="connection_activity_label">Connecció</string>
+
+
+
+    <!-- Strings related to preferences -->
+    <string name="preferences_activity_title">Configuració</string>
+
+    <string name="preferences_connection_title">Connexió</string>
+    <string name="preferences_connection_button_text">Desconnectar</string>
+
+    <string name="preferences_invert_title">Invertir controls</string>
+    <string name="preferences_invert_description">Inverteix de posició els controls de conducció</string>
+
+    <string name="preferences_theme_title">Tema de conducció</string>
+    <string name="preferences_theme_picker_title">Escull mode de conducció</string>
+
+    <string name="preferences_device_name_title">Nom del dispositiu:</string>
+    <string name="preferences_device_address_title">Adreça del dispositiu:</string>
+
+    <!-- Strings related to Bluetooth connection -->
+    <string name="bluetooth_not_compatible_title">No compatible amb BLE</string>
+    <string name="bluetooth_not_compatible_message">Ho sentim, però aquest dispositiu no és compatible amb Bluetooth Low Energy</string>
+    <string name="location_not_granted_title">Permisos de localització</string>
+    <string name="location_not_granted_message">Per tal de poder descobrir nous dispositius LsMaker, es necessita disposar dels permisos de localització.</string>
+    <string name="bluetooth_not_granted_title">Permisos d\'activació de Bluetooth</string>
+    <string name="bluetooth_not_granted_message">Per tal de poder descobrir nous dispositius LsMaker, es necessita activar el Bluetooth.</string>
+    <string name="connection_devices_list_title">Dispositius a l\'abast</string>
+    <string name="connection_devices_list_tip">Escull el dispositiu al qual et vols connectar</string>
+    <string name="connection_device_not_found_text">No s\'han trobat dispositius a l\'abast</string>
+    <string name="connection_scan_button_text">Escaneja</string>
+    <string name="bluetooth_not_enabled_toast">Sense Bluetooth, l\'aplicació no pot funcionar</string>
+    <string name="bluetooth_enabled_toast">S\'ha encès el Bluetooth</string>
+
+</resources>
