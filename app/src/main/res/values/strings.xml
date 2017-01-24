@@ -1,60 +1,64 @@
 <resources>
-    <string name="app_name">LsMaker Remot</string>
+    <string name="app_name">LsMaker Remote</string>
 
     <!-- Strings related to login -->
-    <string name="connection_activity_title">Connexió</string>
+    <string name="connection_activity_title">Connection</string>
 
-    <string name="hint_device_name">Nom del dispositiu</string>
-    <string name="hint_pin">Pin</string>
-    <string name="action_sign_in">Connecta amb el dispositiu</string>
-    <string name="action_sign_in_short">Connecta</string>
-    <string name="error_invalid_device_name">El nom del dispositiu \és massa curt</string>
-    <string name="error_invalid_pincode">El pin és massa curt</string>
-    <string name="error_field_required">El camp no pot estar buit</string>
-    <string name="error_incorrect_credentials">No s\'ha pogut realitzar la connexió, algún dels camps és incorrecte</string>
-    <string name="connecting_message">Connectant, esperi un moment...</string>
-    <string name="connection_error_title">Error de connexió</string>
-    <string name="pop_up_accept">ACCEPTAR</string>
-    <string name="connection_error_message">No s\'ha pogut connectar amb el dispositiu</string>
+    <string name="hint_device_name">Device\'s name</string>
+    <string name="hint_pin">Pin code</string>
+    <string name="action_sign_in">Connect with the device</string>
+    <string name="action_sign_in_short">Connect</string>
+    <string name="error_invalid_device_name">The device\'s name is too short</string>
+    <string name="error_invalid_pincode">The pin code is too short</string>
+    <string name="error_field_required">Can\'t leave the field empty</string>
+    <string name="error_incorrect_credentials">Couldn\'t connect to the device, check the fields</string>
+    <string name="connecting_message">Connecting, please wait...</string>
+    <string name="connection_error_title">Connection error</string>
+    <string name="pop_up_accept">ACCEPT</string>
+    <string name="pop_up_close">CLOSE</string>
+    <string name="connection_error_message">Couldn\'t connect with the device</string>
 
     <!-- Strings related to driving -->
-    <string name="driving_activity_title">Mode conducció</string>
+    <string name="driving_activity_title">Driving mode</string>
 
-    <string name="navigation_drawer_open">Obre el menú de navegació</string>
-    <string name="navigation_drawer_close">Tanca el menú de navegació</string>
+    <string name="navigation_drawer_open">Open navigation menu</string>
+    <string name="navigation_drawer_close">Close navigation menu</string>
 
-    <string name="action_settings">Configuració</string>
-    <string name="menu_driving_mode">Mode conducció</string>
-    <string name="configuration_menu_title">Configuració</string>
-    <string name="configuration_label">Configuració</string>
-    <string name="connection_activity_label">Connecció</string>
+    <string name="action_settings">Configuration</string>
+    <string name="menu_driving_mode">Driving mode</string>
+    <string name="configuration_menu_title">Configuration</string>
+    <string name="configuration_label">Configuration</string>
+    <string name="connection_activity_label">Connection</string>
 
 
 
     <!-- Strings related to preferences -->
-    <string name="preferences_activity_title">Configuració</string>
+    <string name="preferences_activity_title">Configuration</string>
 
-    <string name="preferences_connection_title">Connexió</string>
-    <string name="preferences_connection_button_text">Desconnectar</string>
+    <string name="preferences_connection_title">Connection</string>
+    <string name="preferences_connection_button_text">Disconnect</string>
 
-    <string name="preferences_invert_title">Invertir controls</string>
-    <string name="preferences_invert_description">Inverteix de posició els controls de conducció</string>
+    <string name="preferences_invert_title">Reverse controls</string>
+    <string name="preferences_invert_description">Reverse the driving controls in driving mode</string>
 
-    <string name="preferences_theme_title">Tema  de conducció</string>
-    <string name="preferences_theme_picker_title">Escull mode de conducció</string>
+    <string name="preferences_theme_title">Driving theme</string>
+    <string name="preferences_theme_picker_title">Choose driving theme</string>
 
-    <string name="preferences_device_name_title">Nom del dispositiu:</string>
-    <string name="preferences_device_address_title">Adreça del dispositiu:</string>
+    <string name="preferences_device_name_title">Device\'s name:</string>
+    <string name="preferences_device_address_title">Device\'s address:</string>
 
     <!-- Strings related to Bluetooth connection -->
-    <string name="bluetooth_not_compatible_title">No compatible amb BLE</string>
-    <string name="bluetooth_not_compatible_message">Ho sentim, però aquest dispositiu no és compatible amb Bluetooth Low Energy</string>
-    <string name="bluetooth_not_enabled_title">Bluetooth no activat</string>
-    <string name="bluetooth_not_enabled_message">No s\'ha pogut activar el Bluetooth. Sense Bluetooth no es podrà continuar.</string>
-    <string name="connection_devices_list_title">Dispositius a l\'abast</string>
-    <string name="connection_devices_list_tip">Sel·lecciona el dispositiu al qual et vols connectar</string>
-    <string name="connection_device_not_found_text">No s\'han trobat dispositius a l\'abast</string>
-    <string name="connection_scan_button_text">Escaneja</string>
-
+    <string name="bluetooth_not_compatible_title">Not compatible with BLE</string>
+    <string name="bluetooth_not_compatible_message">We are sorry, but this device is not compatible with amb Bluetooth Low Energy</string>
+    <string name="location_not_granted_title">Localization permissions</string>
+    <string name="location_not_granted_message">In order to discover new LsMaker devices, localization permissions are needed.</string>
+    <string name="bluetooth_not_granted_title">Bluetooth enabling permissions</string>
+    <string name="bluetooth_not_granted_message">In order to discover new LsMaker devices, Bluetooth must be activated.</string>
+    <string name="connection_devices_list_title">Avaliable devices</string>
+    <string name="connection_devices_list_tip">Choose the device to which want you connect</string>
+    <string name="connection_device_not_found_text">Couldn\'t find avaliable devices</string>
+    <string name="connection_scan_button_text">Scan</string>
+    <string name="bluetooth_not_enabled_toast">This app can\'t work without Bluetooth enabled</string>
+    <string name="bluetooth_enabled_toast">Bluetooth enabled</string>
 
 </resources>
