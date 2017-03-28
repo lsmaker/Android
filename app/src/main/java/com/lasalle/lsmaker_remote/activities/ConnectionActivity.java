@@ -24,7 +24,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -61,16 +60,7 @@ public class ConnectionActivity extends AppCompatActivity {
     private static final int REQUEST_FINE_LOCATION = 2; // Needed on API >= 23
     private boolean askForEnableBLE = true;
 
-    // ListView listener
-    private AdapterView.OnItemClickListener mDeviceClickListener = new AdapterView.OnItemClickListener() {
-
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            BluetoothDevice device = deviceListAdapter.getDevices().get(position);
-            attemptLogin(device);
-        }
-    };
-
+    
     // Broadcast receiver for the scanning progress
     private BroadcastReceiver scanningReceiver = new BroadcastReceiver() {
         @Override
@@ -148,7 +138,7 @@ public class ConnectionActivity extends AppCompatActivity {
                     deviceListAdapter = new DeviceListAdapter(this,
                             BluetoothService.getDeviceList(), BluetoothService.getDevRssiValues());
                     devicesListView.setAdapter(deviceListAdapter);
-                    devicesListView.setOnItemClickListener(mDeviceClickListener);
+                    devicesListView.setOnItemClickListener(deviceListAdapter);
                     BluetoothService.setDeviceAdapter(deviceListAdapter);
                 }
             }
@@ -205,7 +195,7 @@ public class ConnectionActivity extends AppCompatActivity {
     /**
      * Attempts to bind the android device to the bluetooth device.
      */
-    private void attemptLogin(BluetoothDevice device) {
+    public void attemptLogin(BluetoothDevice device) {
         if (mAuthTask != null) {
             return;
         }

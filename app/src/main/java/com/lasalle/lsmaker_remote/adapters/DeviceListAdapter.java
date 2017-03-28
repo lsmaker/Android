@@ -1,10 +1,10 @@
 package com.lasalle.lsmaker_remote.adapters;
 
 import android.bluetooth.BluetoothDevice;
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -22,17 +22,18 @@ import java.util.Map;
  * @author Eduard de Torres
  * @version 1.0.0
  */
-public class DeviceListAdapter extends BaseAdapter {
-    private Context context;
+public class DeviceListAdapter extends BaseAdapter implements AdapterView.OnItemClickListener{
+    private ConnectionActivity activity;
     private List<BluetoothDevice> devices;
     private LayoutInflater inflater;
     private Map<String, Integer> devRssiValues;
 
-    public DeviceListAdapter(Context context,
+
+    public DeviceListAdapter(ConnectionActivity activity,
                              List<BluetoothDevice> devices,
                              Map<String, Integer> devRssiValues) {
-        this.context = context;
-        inflater = LayoutInflater.from(context);
+        this.activity = activity;
+        inflater = LayoutInflater.from(activity);
         this.devices = devices;
         this.devRssiValues = devRssiValues;
     }
@@ -86,11 +87,17 @@ public class DeviceListAdapter extends BaseAdapter {
     public void notifyDataSetChanged() {
         super.notifyDataSetChanged();
         if (devices != null && devices.size() > 0) {
-            ((ConnectionActivity) context).showListHasResults(true);
+            activity.showListHasResults(true);
         }
     }
 
     public List<BluetoothDevice> getDevices() {
         return devices;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        BluetoothDevice device = getDevices().get(position);
+        activity.attemptLogin(device);
     }
 }
