@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">LsMaker Remoto</string>
+    <string name="app_name">LSMaker Companion - La Salle</string>
 
     <!-- Strings related to login -->
     <string name="connection_activity_title">Conexión</string>
